@@ -2,12 +2,72 @@ import {Rect} from "./RectUtils.js"
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
-let multiplyer = 20
+let multiplyer = 10
+let powerUpMultiplyer = 300;
 let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer); 
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
-let PowerupRandomNum = Math.floor(Math.random()*250)
-let NumToMatchPowerUp = Math.floor(Math.random()*250)
-
+let PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer)
+let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
+class Boss {
+    constructor() {
+        this.bounds = new Rect(1000,200,20,20);
+        this.speed = 1;
+        this.size = 25;
+        this.intersected = false
+        this.direction = 1
+        //1 = up
+        //2 = down
+        //3 = left
+        //4 = right
+    }
+    draw() {
+        ctx.fillStyle = "red"
+        ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+    }
+    update() {
+        for (let i = 0; i < deathBricks.length; i++) {
+            if (this.bounds.intersects(deathBricks[i].bounds) || deathBricks[i].bounds.intersects(this.bounds)) {
+                this.intersected = true;
+            } else {
+                setTimeout(() => {
+                    this.intersected = false
+                }, 100);
+            }
+        }
+        console.log(this.intersected)
+        if (this.intersected === false) {
+            if (this.bounds.x >= player.bounds.x) {
+                this.bounds.x -= this.speed;
+                this.direction = 3
+            }
+            if (this.bounds.x <= player.bounds.x) {
+                this.bounds.x += this.speed;
+                this.direction = 4
+            }
+            if (this.bounds.y >= player.bounds.y) {
+                this.bounds.y -= this.speed;
+                this.direction = 1
+            }
+            if (this.bounds.y <= player.bounds.y) {
+                this.bounds.y += this.speed;
+                this.direction = 2
+            }
+        } else {
+            if (this.direction === 1){
+                this.bounds.y += this.speed;
+            }
+            if (this.direction === 2){
+                this.bounds.y -= this.speed;
+            }
+            if (this.direction === 3){
+                this.bounds.x += this.speed;
+            }
+            if (this.direction === 4){
+                this.bounds.x -= this.speed;
+            }
+        }
+}
+}
 class Player {
     constructor() {
         this.bounds = new Rect(25,25,15,15);
@@ -45,28 +105,27 @@ class Player {
 }
 class Powerup {
     constructor() {
-        this.started = false;
-        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100,Math.floor(Math.random() * canvas.height-100)+100,25,25);
+        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
         this.visable = true;
     }
 
     draw() {
-        if (this.visable === true) {
-            ctx.fillStyle = "green"
-            ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-        }
+            if (this.visable === true) {
+                ctx.fillStyle = "green"
+                ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+            }
     }
     update() {
         if (this.visable === true) {
-            for (let i = 0; i < powerups.length; i++) {
-                let PUP = powerups[i]
-                if (PUP != this) {
-                    
-                }
-            }
             if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                 player.size /= 1.5
                 player.speed /= 1.5
+                this.visable = false;
+            }
+            if (boss.bounds.intersects(this.bounds) || this.bounds.intersects(boss.bounds)) {
+                boss.bounds.w /= 1.5
+                boss.bounds.h /= 1.5
+                boss.speed /= 1.5
                 this.visable = false;
             }
         }
@@ -93,14 +152,15 @@ function MakePowerupsAndBricks() {
     }
     if (PowerupRandomNum === NumToMatchPowerUp) {
         powerups.push(new Powerup());
-        NumToMatchPowerUp = Math.floor(Math.random()*250)
+        NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
     } else {
-        PowerupRandomNum = Math.floor(Math.random() * 250);
+        PowerupRandomNum = Math.floor(Math.random() * powerUpMultiplyer);
     }
 }
 let deathBricks = []
 let powerups = []
 let player = new Player();
+let boss = new Boss();
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
         currentKey.set(event.key, true);
@@ -116,7 +176,10 @@ function loop() {
     elapsedTime += 0.0166
     time.innerHTML = Math.round(elapsedTime)
     player.draw();
+    boss.draw();
     player.update();
+    boss.update();
+
     MakePowerupsAndBricks();
     for (let i = 0; i < deathBricks.length; i++) {
         deathBricks[i].update();
