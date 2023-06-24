@@ -2,15 +2,15 @@ import {Rect} from "./RectUtils.js"
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
-let multiplyer = 10
+let multiplyer = 20
 let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer); 
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
-let PowerupRandomNum = Math.floor(Math.random()*50)
-let NumToMatchPowerUp = Math.floor(Math.random()*50)
+let PowerupRandomNum = Math.floor(Math.random()*250)
+let NumToMatchPowerUp = Math.floor(Math.random()*250)
 
 class Player {
     constructor() {
-        this.bounds = new Rect(25,25,25,25 );
+        this.bounds = new Rect(25,25,15,15);
         this.speed = 2;
         this.size = 25;
     }
@@ -21,6 +21,8 @@ class Player {
     update() {
         this.bounds.w = this.size
         this.bounds.h = this.size
+        this.size += 0.02
+        this.speed += 0.001
         if (currentKey.get("w")) {
             this.bounds.y -= this.speed;
         }
@@ -43,6 +45,7 @@ class Player {
 }
 class Powerup {
     constructor() {
+        this.started = false;
         this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100,Math.floor(Math.random() * canvas.height-100)+100,25,25);
         this.visable = true;
     }
@@ -55,10 +58,16 @@ class Powerup {
     }
     update() {
         if (this.visable === true) {
+            for (let i = 0; i < powerups.length; i++) {
+                let PUP = powerups[i]
+                if (PUP != this) {
+                    
+                }
+            }
             if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                 player.size /= 1.5
+                player.speed /= 1.5
                 this.visable = false;
-                console.log(this.visable)
             }
         }
     }
@@ -73,12 +82,6 @@ class DeathBrick {
         ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
     }
     update() {
-        this.bounds.w += 0.1
-        this.bounds.h += 0.1
-        if (this.bounds.w >= this.random) {
-            this.bounds.w = this.random
-            this.bounds.h = this.random
-        }
     }
 }
 function MakePowerupsAndBricks() {
@@ -87,13 +90,12 @@ function MakePowerupsAndBricks() {
         NumToMatchDeathBrick = Math.floor(Math.random() * multiplyer)
     } else {
         RandomNumDeathBrick = Math.floor(Math.random() * multiplyer);
-        console.log(RandomNumDeathBrick,NumToMatchDeathBrick)
     }
     if (PowerupRandomNum === NumToMatchPowerUp) {
         powerups.push(new Powerup());
-        NumToMatchPowerUp = Math.floor(Math.random()*500)
+        NumToMatchPowerUp = Math.floor(Math.random()*250)
     } else {
-        PowerupRandomNum = Math.floor(Math.random() * 500);
+        PowerupRandomNum = Math.floor(Math.random() * 250);
     }
 }
 let deathBricks = []
