@@ -2,7 +2,7 @@ import {Rect} from "./RectUtils.js"
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
-let multiplyer = 10
+let multiplyer = 20
 let powerUpMultiplyer = 300;
 let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer); 
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
@@ -81,8 +81,7 @@ class Player {
     update() {
         this.bounds.w = this.size
         this.bounds.h = this.size
-        this.size += 0.02
-        this.speed += 0.001
+        this.size += 1
         if (currentKey.get("w")) {
             this.bounds.y -= this.speed;
         }
@@ -119,13 +118,11 @@ class Powerup {
         if (this.visable === true) {
             if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                 player.size /= 1.5
-                player.speed /= 1.5
                 this.visable = false;
             }
             if (boss.bounds.intersects(this.bounds) || this.bounds.intersects(boss.bounds)) {
                 boss.bounds.w /= 1.5
                 boss.bounds.h /= 1.5
-                boss.speed /= 1.5
                 this.visable = false;
             }
         }
