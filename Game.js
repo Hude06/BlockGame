@@ -262,7 +262,6 @@ function init() {
         document.getElementById('LevelSelector').appendChild(buttonName);
         document.getElementById(buttonName.id).style.top += i*100 + "px";
         document.getElementById(buttonName.id).style.background = "red"
-
         boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed
     }
   })
