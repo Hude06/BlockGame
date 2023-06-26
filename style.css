@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet"> 
-    <title>RPG</title>
-    <h1 id = "time">0</h1>
-    <style>
-        #Start {
+#Start {
     top: 25%;
     left: 42%;
 }
@@ -80,27 +69,3 @@ canvas{
 #deathScreen {
     visibility: hidden;
 }
-    </style>
-</head>
-<body>
-    <div id = "fullscreen">
-        <canvas id = "canvas" width="1600" height="800"></canvas>
-        <div id="menu">
-            <button id = "Start">Start</button>
-            <button id = "About">About</button>
-            <button id = "Setting">Setting</button>
-            <h1 id ="h1">Square Invaders</h1>
-        </div>
-    </div>
-
-    <div id="deathScreen"> 
-        <center>
-        <h1>You Died</h1>
-        <h3 id="reason">Reason: </h3>
-        <h3 id="tease">Get Rekt</h3>
-        </center>
-    </div>
-
-    <script type = "module" src="Game.js"></script>
-</body>
-</html>
