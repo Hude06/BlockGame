@@ -12,6 +12,8 @@ let mode = "menu";
 let time = document.getElementById("time")
 let elapsedTime = 0;
 let LEVEL_Data = [];
+let LEVELON = 0;
+let roundedTime = Math.round(elapsedTime)
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
@@ -38,7 +40,6 @@ class Boss {
                 }, 100);
             }
         }
-        console.log(this.intersected)
         if (this.intersected === false) {
             if (this.bounds.x >= player.bounds.x) {
                 this.bounds.x -= this.speed;
@@ -117,7 +118,6 @@ class Player {
         }
     }
 }
-let roundedTime = Math.round(elapsedTime)
 class GoldKey {
     constructor() {
         this.bounds = new Rect(200, 200,25,25);
@@ -201,8 +201,9 @@ function MakePowerupsAndBricks() {
 let deathBricks = []
 let powerups = []
 let player = new Player();
-let boss = new Boss();
 let goldKey = new GoldKey();
+let boss = new Boss();
+
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
         currentKey.set(event.key, true);
@@ -249,7 +250,8 @@ function init() {
   .then(data => {
     LEVEL_Data = data;
     for (let i = 0; i < data.levels.length; i++) {
-        console.log(data.levels[i].boss)
+        (data.levels[i].boss)
+        boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed
     }
   })
   .catch(error => {
