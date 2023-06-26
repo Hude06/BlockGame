@@ -25,7 +25,7 @@ class Boss {
         //4 = right
     }
     draw() {
-        ctx.fillStyle = "red"
+        ctx.fillStyle = " #d3473d "
         ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
     }
     update() {
@@ -79,13 +79,12 @@ class Player {
         this.size = 25;
     }
     draw() {
-        ctx.fillStyle = "black"
+        ctx.fillStyle = "#5a473e"
         ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
     }
     update() {
-        this.bounds.w = this.size
-        this.bounds.h = this.size
-        this.size += 0.01
+        this.bounds.w += 0.01
+        this.bounds.h += 0.01
         if (currentKey.get("w")) {
             this.bounds.y -= this.speed;
         }
@@ -109,23 +108,26 @@ class Player {
 let roundedTime = Math.round(elapsedTime)
 class GoldKey {
     constructor() {
-        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
+        this.bounds = new Rect(200, 200,25,25);
         this.visable = true;
+        this.TimeToShow = 15
     }
 
     draw() {
-        if (roundedTime >= 30) {
+        if (roundedTime >= this.TimeToShow) {
             if (this.visable === true) {
-                ctx.fillStyle = "gold"
+                ctx.fillStyle = "#f6ad0f"
                 ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
             }
         }
     }
     update() {
-        if (this.roundedTime >= 30) {
+        if (roundedTime >= this.TimeToShow) {
             if (this.visable === true) {
                 if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                     this.visable = false;
+                    alert("You WIN!!!")
+                    location.reload();
                 }
             }
         }
@@ -146,7 +148,8 @@ class Powerup {
     update() {
         if (this.visable === true) {
             if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
-                player.size /= 1.5
+                player.bounds.w /= 1.5
+                player.bounds.h /= 1.5
                 this.visable = false;
             }
             if (boss.bounds.intersects(this.bounds) || this.bounds.intersects(boss.bounds)) {
@@ -163,7 +166,7 @@ class DeathBrick {
         this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100,Math.floor(Math.random() * canvas.height-100)+100,10,10);
     }
     draw() {
-        ctx.fillStyle = "blue"
+        ctx.fillStyle = "#316a96"
         ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
     }
     update() {
@@ -197,6 +200,7 @@ function keyboardInit() {
     });
 }
 function loop() {
+    roundedTime = Math.round(elapsedTime)
     ctx.clearRect(0,0,canvas.width,canvas.height)
     if (mode === "menu") {
 
