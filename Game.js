@@ -9,6 +9,8 @@ let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
 let PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer)
 let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
 let mode = "menu";
+let time = document.getElementById("time")
+let elapsedTime = 0;
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
@@ -103,6 +105,31 @@ class Player {
         }
     }
 }
+let roundedTime = Math.round(elapsedTime)
+class GoldKey {
+    constructor() {
+        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
+        this.visable = true;
+    }
+
+    draw() {
+        if (roundedTime >= 30) {
+            if (this.visable === true) {
+                ctx.fillStyle = "gold"
+                ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+            }
+        }
+    }
+    update() {
+        if (this.roundedTime >= 30) {
+            if (this.visable === true) {
+                if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
+                    this.visable = false;
+                }
+            }
+        }
+    }
+}
 class Powerup {
     constructor() {
         this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
@@ -159,6 +186,7 @@ let deathBricks = []
 let powerups = []
 let player = new Player();
 let boss = new Boss();
+let goldKey = new GoldKey();
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
         currentKey.set(event.key, true);
@@ -167,8 +195,6 @@ function keyboardInit() {
         currentKey.set(event.key, false);
     });
 }
-let time = document.getElementById("time")
-let elapsedTime = 0;
 function loop() {
     ctx.clearRect(0,0,canvas.width,canvas.height)
     if (mode === "menu") {
@@ -180,6 +206,8 @@ function loop() {
         elapsedTime += 0.0166
         time.innerHTML = Math.round(elapsedTime)
         //DRAW
+        goldKey.draw(ctx);
+        goldKey.update();
         player.draw(ctx);
         boss.draw(ctx);
         //UPDATE
