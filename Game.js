@@ -85,7 +85,7 @@ class Player {
     update() {
         this.bounds.w += 0.01
         this.bounds.h += 0.01
-        if (currentKey.get("w")) {
+        if (currentKey.get("w") ) {
             this.bounds.y -= this.speed;
         }
         if (currentKey.get("s")) {
@@ -102,6 +102,18 @@ class Player {
                 alert("You Died!")
                 location.reload();
             }
+        }
+        if ( this.bounds.y < 0 ) {
+            this.bounds.y = 0.5;
+        }
+        if ( this.bounds.x < 0 ) {
+            this.bounds.x = 0.5;
+        }
+        if ( this.bounds.y > 780 ) {
+            this.bounds.y = 779.5;
+        }
+        if ( this.bounds.x > 1574 ) {
+            this.bounds.x = 1573.5;
         }
     }
 }
