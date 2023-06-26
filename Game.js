@@ -218,24 +218,26 @@ function JSON() {
   .then(response => response.json())
   .then(data => {
     LEVEL_Data = data;
-    for (let i = 0; i < data.levels.length; i++) {
-        const buttonName = document.createElement('button')
-        buttonName.id = data.levels[i].name
-        buttonName.innerHTML = i+1
-        document.getElementById('LevelSelector').appendChild(buttonName);
-        document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
-        document.getElementById(buttonName.id).style.background = "red";
-        document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
+    for (let i = 0; i < data.levels.length; i++) {            
+            const buttonName = document.createElement('button')
+            buttonName.id = data.levels[i].name
+            buttonName.innerHTML = i+1
+            document.getElementById('LevelSelector').appendChild(buttonName);
+            document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
+            document.getElementById(buttonName.id).style.background = "red";
+            document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
         boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
         goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
         player.bounds.w = data.levels[LEVELON].player[0].startingSize;
         player.bounds.h = data.levels[LEVELON].player[0].startingSize;
-        document.getElementById(buttonName.id).addEventListener("click",function(){
-            LEVELON = buttonName.id.slice(5, 100)-1;
-            console.log(LEVELON)
-            mode = "game"
-            document.getElementById("LevelSelector").style.visibility = "hidden";
-        })
+        setTimeout(() => {
+            document.getElementById(buttonName.id).addEventListener("click",function(){
+                LEVELON = buttonName.id.slice(5, 100)-1;
+                console.log(LEVELON)
+                mode = "startGame"
+                document.getElementById("LevelSelector").style.visibility = "hidden";
+            })          
+        }, 500);
     }
   })
   .catch(error => {
@@ -302,6 +304,9 @@ function loop() {
         }
 
     }
+    if (mode === "levelSelector") {
+        document.getElementById("LevelSelector").style.visibility = "visible";
+    }
     requestAnimationFrame(loop)
 }
 function init() {
@@ -310,11 +315,14 @@ function init() {
         document.getElementById("winScreen").style.visibility = "hidden";
     });
     ls.addEventListener("click", function (){
-        mode = "levelselect";
+        mode = "levelSelector";
+        JSON();
+
         document.getElementById("winScreen").style.visibility = "hidden";
     });
     ta.addEventListener("click", function (){
         mode = "startGame";
+        JSON();
         document.getElementById("winScreen").style.visibility = "hidden";
     });
     nl.addEventListener("click", function (){
@@ -324,7 +332,7 @@ function init() {
         document.getElementById("winScreen").style.visibility = "hidden";
     });
     JSON();
-    document.getElementById("LevelSeletorButton").addEventListener("click",function(){
+    document.getElementById("LevelSelectorButton").addEventListener("click",function(){
         mode = "levelSelector"
         document.getElementById("LevelSelector").style.visibility = "visible";
     })
