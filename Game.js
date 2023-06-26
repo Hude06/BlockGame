@@ -275,12 +275,12 @@ function init() {
         document.getElementById("winScreen").style.visibility = "hidden";
     });
     ta.addEventListener("click", function (){
-        mode = "game";
+        mode = "startGame";
         document.getElementById("winScreen").style.visibility = "hidden";
     });
-    ta.addEventListener("click", function (){
+    nl.addEventListener("click", function (){
         LEVELON++;
-        mode = "game";
+        mode = "startGame";
         document.getElementById("winScreen").style.visibility = "hidden";
     });
 
