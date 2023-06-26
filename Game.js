@@ -110,11 +110,11 @@ class Player {
         if ( this.bounds.x < 0 ) {
             this.bounds.x = 0.5;
         }
-        if ( this.bounds.y > 780 ) {
-            this.bounds.y = 779.5;
+        if ( this.bounds.y > canvas.height-20 ) {
+            this.bounds.y = canvas.height-20;
         }
-        if ( this.bounds.x > 1574 ) {
-            this.bounds.x = 1573.5;
+        if ( this.bounds.x > canvas.width-50 ) {
+            this.bounds.x = canvas.width-50;
         }
     }
 }
@@ -216,10 +216,12 @@ function loop() {
     roundedTime = Math.round(elapsedTime)
     ctx.clearRect(0,0,canvas.width,canvas.height)
     if (mode === "menu") {
-
+        document.getElementById("menu").style.visibility = "visible"
+    }
+    if (mode != "menu") {
+        document.getElementById("menu").style.visibility = "hidden"
     }
     if (mode === "game") {
-        document.getElementById("menu").style.visibility = "hidden"
         document.getElementById("time").style.visibility = "visible"
         elapsedTime += 0.0166
         time.innerHTML = Math.round(elapsedTime)
@@ -260,6 +262,10 @@ function init() {
   });
     document.getElementById("Start").addEventListener("click",function(){
         mode = "game"
+    })
+    document.getElementById("LevelSeletorButton").addEventListener("click",function(){
+        mode = "levelSelector"
+        document.getElementById("levelSelect").style.visibility = "visible"
     })
     keyboardInit();
     loop()
