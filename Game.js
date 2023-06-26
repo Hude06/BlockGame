@@ -229,11 +229,13 @@ function loop() {
     if (mode != "menu") {
         document.getElementById("menu").style.visibility = "hidden"
     }
-    if (mode === "game") {
-        elapsedTime = 0;
+    if (mode === "startGame") {
+        elapsedTime = 0
         deathBricks = []
         powerups = []
-        
+        mode = "game"
+    }
+    if (mode === "game") {        
         document.getElementById("time").style.visibility = "visible"
         elapsedTime += 0.0166
 
