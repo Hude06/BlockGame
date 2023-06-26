@@ -82,9 +82,8 @@ class Player {
         ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
     }
     update() {
-        this.bounds.w = this.size
-        this.bounds.h = this.size
-        this.size += 0.01
+        this.bounds.w += 0.01
+        this.bounds.h += 0.01
         if (currentKey.get("w")) {
             this.bounds.y -= this.speed;
         }
@@ -108,12 +107,13 @@ class Player {
 let roundedTime = Math.round(elapsedTime)
 class GoldKey {
     constructor() {
-        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
+        this.bounds = new Rect(200, 200,25,25);
         this.visable = true;
+        this.TimeToShow = 15
     }
 
     draw() {
-        if (roundedTime >= 30) {
+        if (roundedTime >= this.TimeToShow) {
             if (this.visable === true) {
                 ctx.fillStyle = "gold"
                 ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
@@ -121,10 +121,12 @@ class GoldKey {
         }
     }
     update() {
-        if (this.roundedTime >= 30) {
+        if (roundedTime >= this.TimeToShow) {
             if (this.visable === true) {
                 if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                     this.visable = false;
+                    alert("You WIN!!!")
+                    location.reload();
                 }
             }
         }
@@ -196,6 +198,7 @@ function keyboardInit() {
     });
 }
 function loop() {
+    roundedTime = Math.round(elapsedTime)
     ctx.clearRect(0,0,canvas.width,canvas.height)
     if (mode === "menu") {
 
