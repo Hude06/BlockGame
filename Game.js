@@ -252,7 +252,9 @@ function init() {
   .then(data => {
     LEVEL_Data = data;
     for (let i = 0; i < data.levels.length; i++) {
-        (data.levels[i].boss)
+        const button = document.createElement('button')
+        button.innerHTML = i
+        document.getElementById('LevelSelector').appendChild(button);
         boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed
     }
   })
@@ -265,7 +267,7 @@ function init() {
     })
     document.getElementById("LevelSeletorButton").addEventListener("click",function(){
         mode = "levelSelector"
-        document.getElementById("levelSelect").style.visibility = "visible"
+        document.getElementById("LevelSelector").visibility = "visible"
     })
     keyboardInit();
     loop()
