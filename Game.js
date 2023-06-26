@@ -275,7 +275,6 @@ function loop() {
     requestAnimationFrame(loop)
 }
 function init() {
-
     mm.addEventListener("click", function (){
         mode = "menu";
         document.getElementById("winScreen").style.visibility = "hidden";
@@ -288,9 +287,9 @@ function init() {
         mode = "game";
         document.getElementById("winScreen").style.visibility = "hidden";
     });
-    ta.addEventListener("click", function (){
+    nl.addEventListener("click", function (){
         LEVELON++;
-        mode = "game";
+        mode = "startGame";
         document.getElementById("winScreen").style.visibility = "hidden";
     });
 
