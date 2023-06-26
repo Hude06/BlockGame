@@ -270,6 +270,9 @@ function init() {
             LEVELON = buttonName.id.slice(5, 100)-1;
             boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
             goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
+            player.bounds.w = data.levels[LEVELON].player[0].startingSize;
+            player.bounds.h = data.levels[LEVELON].player[0].startingSize;
+
             console.log(LEVELON)
             mode = "game"
             document.getElementById("LevelSelector").style.visibility = "hidden";

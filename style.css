@@ -19,7 +19,8 @@ button {
     align-items: center;
 }
 #time {
-    font-size: 50px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 8vmin;
     visibility: hidden;
     text-align: center;
     z-index: 1;
