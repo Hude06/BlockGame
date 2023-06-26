@@ -68,3 +68,8 @@ canvas{
 #Level1 {
     top: 200px;
 }
+#winScreen {
+    position: absolute;
+    z-index: 1;
+    visibility: hidden;
+}

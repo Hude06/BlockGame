@@ -224,6 +224,7 @@ function loop() {
     ctx.clearRect(0,0,canvas.width,canvas.height)
     if (mode === "menu") {
         document.getElementById("menu").style.visibility = "visible"
+        document.getElementById("time").style.visibility = "hidden"
     }
     if (mode != "menu") {
         document.getElementById("menu").style.visibility = "hidden"
@@ -257,6 +258,25 @@ function loop() {
     requestAnimationFrame(loop)
 }
 function init() {
+
+    mm.addEventListener("click", function (){
+        mode = "menu";
+        document.getElementById("winScreen").style.visibility = "hidden";
+    });
+    ls.addEventListener("click", function (){
+        mode = "levelselect";
+        document.getElementById("winScreen").style.visibility = "hidden";
+    });
+    ta.addEventListener("click", function (){
+        mode = "game";
+        document.getElementById("winScreen").style.visibility = "hidden";
+    });
+    ta.addEventListener("click", function (){
+        LEVELON++;
+        mode = "game";
+        document.getElementById("winScreen").style.visibility = "hidden";
+    });
+
     document.getElementById("LevelSeletorButton").addEventListener("click",function(){
         mode = "levelSelector"
         document.getElementById("LevelSelector").style.visibility = "visible";
