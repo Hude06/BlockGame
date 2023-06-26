@@ -11,6 +11,9 @@ let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
 let mode = "menu";
 let time = document.getElementById("time")
 let elapsedTime = 0;
+let LEVEL_Data = [
+
+]
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
@@ -231,6 +234,18 @@ function loop() {
     requestAnimationFrame(loop)
 }
 function init() {
+    fetch('levels.json')
+  .then(response => response.json())
+  .then(data => {
+    LEVEL_Data = data;
+    for (let i = 0; i < data.levels.length; i++) {
+        console.log(data.levels[i].boss)
+    }
+  })
+  .catch(error => {
+    // Handle any errors that occur during the fetch
+    console.error('Error:', error);
+  });
     document.getElementById("Start").addEventListener("click",function(){
         mode = "game"
     })

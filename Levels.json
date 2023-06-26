@@ -1,0 +1,35 @@
+{
+    "levels": [
+      {
+        "id": 1,
+        "name": "Level 1",
+        "description": "This is the first level",
+        "difficulty": "Easy",
+        "boss": [
+        {
+            "speed": 3
+        }]
+      },
+      {
+        "id": 2,
+        "name": "Level 2",
+        "description": "This is the second level",
+        "difficulty": "Medium",
+        "boss": [
+            {
+                "speed": 3
+            }]
+      },
+      {
+        "id": 3,
+        "name": "Level 3",
+        "description": "This is the third level",
+        "difficulty": "Hard",
+        "boss": [
+            {
+                "speed": 3
+            }]
+      }
+    ]
+  }
+  
