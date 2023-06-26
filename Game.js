@@ -8,6 +8,7 @@ let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer);
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
 let PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer)
 let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
+let mode = "menu";
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
@@ -81,7 +82,7 @@ class Player {
     update() {
         this.bounds.w = this.size
         this.bounds.h = this.size
-        this.size += 1
+        this.size += 0.01
         if (currentKey.get("w")) {
             this.bounds.y -= this.speed;
         }
@@ -170,25 +171,37 @@ let time = document.getElementById("time")
 let elapsedTime = 0;
 function loop() {
     ctx.clearRect(0,0,canvas.width,canvas.height)
-    elapsedTime += 0.0166
-    time.innerHTML = Math.round(elapsedTime)
-    player.draw();
-    boss.draw();
-    player.update();
-    boss.update();
+    if (mode === "menu") {
 
-    MakePowerupsAndBricks();
-    for (let i = 0; i < deathBricks.length; i++) {
-        deathBricks[i].update();
-        deathBricks[i].draw();
     }
-    for (let i = 0; i < powerups.length; i++) {
-        powerups[i].update();
-        powerups[i].draw();
+    if (mode === "game") {
+        document.getElementById("menu").style.visibility = "hidden"
+        document.getElementById("time").style.visibility = "visible"
+        elapsedTime += 0.0166
+        time.innerHTML = Math.round(elapsedTime)
+        //DRAW
+        player.draw(ctx);
+        boss.draw(ctx);
+        //UPDATE
+        player.update();
+        boss.update();
+
+        MakePowerupsAndBricks();
+        for (let i = 0; i < deathBricks.length; i++) {
+            deathBricks[i].update();
+            deathBricks[i].draw();
+        }
+        for (let i = 0; i < powerups.length; i++) {
+            powerups[i].update();
+            powerups[i].draw();
+        }
     }
     requestAnimationFrame(loop)
 }
 function init() {
+    document.getElementById("Start").addEventListener("click",function(){
+        mode = "game"
+    })
     keyboardInit();
     loop()
 }

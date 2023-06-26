@@ -9,6 +9,44 @@
     <title>RPG</title>
     <h1 id = "time">0</h1>
     <style>
+        #Start {
+            top: 25%;
+            left: 42%;
+        }
+        #Setting {
+            top: 40%;
+            left: 42%;
+        }
+        #About {
+            top: 55%;
+            left: 42%;
+        }
+        button {
+            position: absolute;
+            z-index: 1;
+            font-size: 50px;
+            border: 0px;
+            border-radius: 3px;
+            width: 200px;
+            height: 100px;
+            background-color: aqua;
+        }
+        #menu {
+            visibility: visible;
+        }
+        #time {
+            visibility: hidden;
+        }
+        #h1 {
+            padding-left: 0;
+            padding-right: 0;
+            display: block;
+            overflow: hidden;
+            object-fit: contain;
+            max-width: 100%;
+            max-height: 100%;
+            left: 30%;
+        }
         h1 {
             font-size: 80px;
             font-family: "Lato", "Sans Serif";
@@ -44,6 +82,12 @@
 <body>
     <div id = "fullscreen">
         <canvas id = "canvas" width="1600" height="800"></canvas>
+        <div id="menu">
+            <button id = "Start">Start</button>
+            <button id = "About">About</button>
+            <button id = "Setting">Setting</button>
+            <h1 id ="h1">Square Invaders</h1>
+        </div>
     </div>
     <script type = "module" src="Game.js"></script>
 </body>
