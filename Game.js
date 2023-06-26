@@ -203,7 +203,6 @@ let powerups = []
 let player = new Player();
 let goldKey = new GoldKey();
 let boss = new Boss();
-
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
         currentKey.set(event.key, true);
@@ -247,15 +246,29 @@ function loop() {
     requestAnimationFrame(loop)
 }
 function init() {
+    document.getElementById("LevelSeletorButton").addEventListener("click",function(){
+        mode = "levelSelector"
+        document.getElementById("LevelSelector").style.visibility = "visible";
+    })
     fetch('levels.json')
   .then(response => response.json())
   .then(data => {
     LEVEL_Data = data;
     for (let i = 0; i < data.levels.length; i++) {
-        const button = document.createElement('button')
-        button.innerHTML = i
-        document.getElementById('LevelSelector').appendChild(button);
-        boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed
+        const buttonName = document.createElement('button')
+        buttonName.id = data.levels[i].name
+        buttonName.innerHTML = i+1
+        document.getElementById('LevelSelector').appendChild(buttonName);
+        document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
+        document.getElementById(buttonName.id).style.background = "red";
+        document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
+        document.getElementById(buttonName.id).addEventListener("click",function(){
+            LEVELON = buttonName.id.slice(5, 100)-1;
+            boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
+            console.log(LEVELON)
+            mode = "game"
+            document.getElementById("LevelSelector").style.visibility = "hidden";
+        })
     }
   })
   .catch(error => {
@@ -264,10 +277,6 @@ function init() {
   });
     document.getElementById("Start").addEventListener("click",function(){
         mode = "game"
-    })
-    document.getElementById("LevelSeletorButton").addEventListener("click",function(){
-        mode = "levelSelector"
-        document.getElementById("LevelSelector").visibility = "visible"
     })
     keyboardInit();
     loop()
