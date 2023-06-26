@@ -5,8 +5,14 @@
         "name": "Level1",
         "boss": [
         {
-            "speed": 0
-        }]
+            "speed": 1
+        }],
+        "TimeToWin": 15,
+        "player": [
+          {
+            "startingSize":15
+          }
+        ]
       },
       {
         "id": 2,
@@ -14,7 +20,13 @@
         "boss": [
             {
                 "speed": 2
-            }]
+            }],
+          "TimeToWin": 30,
+          "player": [
+            {
+              "startingSize":20
+            }
+          ]
       },
       {
         "id": 3,
@@ -22,7 +34,13 @@
         "boss": [
             {
                 "speed": 3
-            }]
+            }],
+        "TimeToWin": 45,
+        "player": [
+          {
+            "startingSize":30
+          }
+        ]
       },
       {
         "id": 4,
@@ -30,7 +48,13 @@
         "boss": [
             {
                 "speed": 4
-            }]
+            }],
+          "TimeToWin": 60,
+          "player": [
+            {
+              "startingSize":50
+            }
+          ]
       }
     ]
   }

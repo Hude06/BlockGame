@@ -1,19 +1,6 @@
 body {
     background-color:   #f5efeb  ;
 }
-#Start {
-    top: 25%;
-    left: 42%;
-}
-#LevelSeletorButton {
-    top: 40%;
-    left: 42%;
-    /* font-size: 40px; */
-}
-#About {
-    top: 55%;
-    left: 42%;
-}
 button {
     z-index: 1;
     font-size: 3vmin;
@@ -32,13 +19,15 @@ button {
     align-items: center;
 }
 #time {
-    font-size: 50px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 8vmin;
     visibility: hidden;
     text-align: center;
     z-index: 1;
 }
 #h1 {
-    font-size: 5vmin;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10vmin;
 }
 canvas{
     visibility: visible;
@@ -78,9 +67,4 @@ canvas{
 }
 #Level1 {
     top: 200px;
-}
-#winScreen {
-    position: absolute;
-    z-index: 1;
-    visibility: hidden;
 }

@@ -1,4 +1,5 @@
 import {Rect} from "./RectUtils.js"
+import { ParticleSource } from "./Particals.js";
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
@@ -106,8 +107,12 @@ class Player {
         }
         for (let i = 0; i < deathBricks.length; i++) {
             if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
-                alert("You Died!")
-                location.reload();
+                particalEngine.start_particles(this.bounds.x,this.bounds.y)
+                setTimeout(() => {
+                    alert("You Died!")
+                    location.reload();
+
+                }, 100);
             }
         }
         if ( this.bounds.y < 0 ) {
@@ -119,8 +124,8 @@ class Player {
         if ( this.bounds.y > canvas.height-20 ) {
             this.bounds.y = canvas.height-20;
         }
-        if ( this.bounds.x > canvas.width-50 ) {
-            this.bounds.x = canvas.width-50;
+        if ( this.bounds.x > canvas.width-this.bounds.w) {
+            this.bounds.x = canvas.width-this.bounds.w;
         }
     }
 }
@@ -169,11 +174,7 @@ class Powerup {
                 player.bounds.w /= 1.5
                 player.bounds.h /= 1.5
                 this.visable = false;
-            }
-            if (boss.bounds.intersects(this.bounds) || this.bounds.intersects(boss.bounds)) {
-                boss.bounds.w /= 1.5
-                boss.bounds.h /= 1.5
-                this.visable = false;
+                particalEngine.start_particles(this.bounds.x,this.bounds.y)
             }
         }
     }
@@ -209,6 +210,7 @@ let powerups = []
 let player = new Player();
 let goldKey = new GoldKey();
 let boss = new Boss();
+let particalEngine = new ParticleSource();
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
         currentKey.set(event.key, true);
@@ -231,11 +233,13 @@ function loop() {
         elapsedTime += 0.0166
         time.innerHTML = Math.round(elapsedTime)
         //DRAW
+        particalEngine.draw_particles(ctx,238, 134, 149)
         goldKey.draw(ctx);
         goldKey.update();
         player.draw(ctx);
         boss.draw(ctx);
         //UPDATE
+        particalEngine.update_particles();
         player.update();
         boss.update();
 
@@ -272,6 +276,10 @@ function init() {
         document.getElementById(buttonName.id).addEventListener("click",function(){
             LEVELON = buttonName.id.slice(5, 100)-1;
             boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
+            goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
+            player.bounds.w = data.levels[LEVELON].player[0].startingSize;
+            player.bounds.h = data.levels[LEVELON].player[0].startingSize;
+
             console.log(LEVELON)
             mode = "game"
             document.getElementById("LevelSelector").style.visibility = "hidden";
