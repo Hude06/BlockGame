@@ -11,6 +11,7 @@ let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
 let mode = "menu";
 let time = document.getElementById("time")
 let elapsedTime = 0;
+let varReason = "";
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
