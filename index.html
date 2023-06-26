@@ -70,12 +70,10 @@ canvas{
     max-height: 100%;
 }
 h2 {
+    position: absolute;
+    z-index: 1;
+    text-align: center;
     font-size: 30px;
-}
-butto {
-    background: #000;
-    width: 100px;
-    height: 10px;
 }
 #fullscreen
  {
@@ -91,8 +89,11 @@ butto {
 #deathScreen {
     visibility: hidden;
 }
-#levelSelect {
+#LevelSelector {
     visibility: hidden;
+}
+#text{
+    font-size: 100px;
 }
     </style>
 </head>
@@ -100,29 +101,15 @@ butto {
     <div id = "fullscreen">
         <canvas id = "canvas" width="1600" height="800"></canvas>
         <div id="menu">
+            <h1 id ="h1">Square Invaders</h1>
             <button id = "Start">Start</button>
             <button id = "About">About</button>
             <button id = "LevelSeletorButton">Level Select</button>
-            <h1 id ="h1">Square Invaders</h1>
         </div>
+        <div id = "LevelSelector">
 
-        
-    <div id="levelSelect"> 
-        <center>
-        <h2>Level Select</h2>
-        </center>
+        </div>
     </div>
-
-    </div>
-
-    <div id="deathScreen"> 
-        <center>
-        <h1>You Died</h1>
-        <h3 id="reason">Reason: </h3>
-        <h3 id="tease">Get Rekt</h3>
-        </center>
-    </div>
-
     <script type = "module" src="Game.js"></script>
 </body>
 </html>
