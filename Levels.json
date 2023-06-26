@@ -2,7 +2,7 @@
     "levels": [
       {
         "id": 1,
-        "name": "Level 1",
+        "name": "Level1",
         "description": "This is the first level",
         "difficulty": "Easy",
         "boss": [
@@ -12,7 +12,7 @@
       },
       {
         "id": 2,
-        "name": "Level 2",
+        "name": "Level2",
         "description": "This is the second level",
         "difficulty": "Medium",
         "boss": [
@@ -22,7 +22,17 @@
       },
       {
         "id": 3,
-        "name": "Level 3",
+        "name": "Level3",
+        "description": "This is the third level",
+        "difficulty": "Hard",
+        "boss": [
+            {
+                "speed": 3
+            }]
+      },
+      {
+        "id": 4,
+        "name": "Level4",
         "description": "This is the third level",
         "difficulty": "Hard",
         "boss": [

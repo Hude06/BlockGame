@@ -257,9 +257,12 @@ function init() {
     LEVEL_Data = data;
     for (let i = 0; i < data.levels.length; i++) {
         const buttonName = document.createElement('button')
-        button.style.top = "500px"
-        button.innerHTML = i
-        document.getElementById('LevelSelector').appendChild(button);
+        buttonName.id = data.levels[i].name
+        buttonName.innerHTML = i
+        document.getElementById('LevelSelector').appendChild(buttonName);
+        document.getElementById(buttonName.id).style.top += i*100 + "px";
+        document.getElementById(buttonName.id).style.background = "red"
+
         boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed
     }
   })
