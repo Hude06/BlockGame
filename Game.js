@@ -128,6 +128,14 @@ class Player {
             this.bounds.x = canvas.width-this.bounds.w;
         }
     }
+    reset() {
+        this.bounds,x = (25);
+        this.bounds.y = (25)
+        this.bounds.w = 15
+        this.bounds.h = 15
+        this.speed = 2;
+        this.size = 25;
+    }
 }
 class GoldKey {
     constructor() {
@@ -233,6 +241,8 @@ function loop() {
         elapsedTime = 0
         deathBricks = []
         powerups = []
+        player.reset();
+
         mode = "game"
     }
     if (mode === "game") {        
@@ -265,7 +275,6 @@ function loop() {
     requestAnimationFrame(loop)
 }
 function init() {
-
     mm.addEventListener("click", function (){
         mode = "menu";
         document.getElementById("winScreen").style.visibility = "hidden";
