@@ -256,7 +256,8 @@ function init() {
   .then(data => {
     LEVEL_Data = data;
     for (let i = 0; i < data.levels.length; i++) {
-        const button = document.createElement('button')
+        const buttonName = document.createElement('button')
+        button.style.top = "500px"
         button.innerHTML = i
         document.getElementById('LevelSelector').appendChild(button);
         boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed
