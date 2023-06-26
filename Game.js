@@ -230,8 +230,13 @@ function loop() {
         document.getElementById("menu").style.visibility = "hidden"
     }
     if (mode === "game") {
+        elapsedTime = 0;
+        deathBricks = []
+        powerups = []
+        
         document.getElementById("time").style.visibility = "visible"
         elapsedTime += 0.0166
+
         time.innerHTML = Math.round(elapsedTime)
         //DRAW
         particalEngine.draw_particles(ctx,238, 134, 149)
