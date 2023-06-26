@@ -1,2 +1,1 @@
-
-# BlockGame
+Simple Block Game!
