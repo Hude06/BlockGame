@@ -247,6 +247,10 @@ function loop() {
     requestAnimationFrame(loop)
 }
 function init() {
+    document.getElementById("LevelSeletorButton").addEventListener("click",function(){
+        mode = "levelSelector"
+        document.getElementById("LevelSelector").style.visibility = "visible";
+    })
     fetch('levels.json')
   .then(response => response.json())
   .then(data => {
@@ -264,10 +268,6 @@ function init() {
   });
     document.getElementById("Start").addEventListener("click",function(){
         mode = "game"
-    })
-    document.getElementById("LevelSeletorButton").addEventListener("click",function(){
-        mode = "levelSelector"
-        document.getElementById("LevelSelector").visibility = "visible"
     })
     keyboardInit();
     loop()
