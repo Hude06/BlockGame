@@ -15,6 +15,12 @@ let elapsedTime = 0;
 let LEVEL_Data = [];
 let LEVELON = 0;
 let roundedTime = Math.round(elapsedTime)
+
+const mm = document.getElementById("mmbtn");
+const ls = document.getElementById("lsbtn");
+const ta = document.getElementById("lsbtn");
+const nl = document.getElementById("nlbtn");
+
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
@@ -143,8 +149,8 @@ class GoldKey {
             if (this.visable === true) {
                 if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                     this.visable = false;
-                    alert("You WIN!!!")
-                    location.reload();
+                    mode = "win"
+                    document.getElementById("winScreen").style.visibility = "visible";
                 }
             }
         }
@@ -246,6 +252,7 @@ function loop() {
             powerups[i].update();
             powerups[i].draw();
         }
+
     }
     requestAnimationFrame(loop)
 }
