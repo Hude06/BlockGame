@@ -203,7 +203,6 @@ let powerups = []
 let player = new Player();
 let goldKey = new GoldKey();
 let boss = new Boss();
-
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
         currentKey.set(event.key, true);
@@ -258,12 +257,18 @@ function init() {
     for (let i = 0; i < data.levels.length; i++) {
         const buttonName = document.createElement('button')
         buttonName.id = data.levels[i].name
-        buttonName.innerHTML = i
+        buttonName.innerHTML = i+1
         document.getElementById('LevelSelector').appendChild(buttonName);
         document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
-        document.getElementById(buttonName.id).style.background = "red"
-        document.getElementById(buttonName.id).style.marginTop += i*5 + "px"
-        boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed
+        document.getElementById(buttonName.id).style.background = "red";
+        document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
+        document.getElementById(buttonName.id).addEventListener("click",function(){
+            LEVELON = buttonName.id.slice(5, 100)-1;
+            boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
+            console.log(LEVELON)
+            mode = "game"
+            document.getElementById("LevelSelector").style.visibility = "hidden";
+        })
     }
   })
   .catch(error => {
