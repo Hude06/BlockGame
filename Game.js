@@ -106,6 +106,7 @@ class Player {
         ctx.strokeStyle = "black"
         ctx.lineWidth = 3
         ctx.strokeRect(20,10,200,40)
+        ctx.fillStyle = "green"
         ctx.fillRect(20,10,this.helth*2,40)
     }
     update() {
