@@ -51,6 +51,10 @@ class Boss {
         }
         if (this.bounds.intersects(player.bounds) || player.bounds.intersects(this.bounds)) {
             player.helth -= this.damage / 10 
+            console.log(player.helth)
+            if (player.helth <= 0) {
+                player.alive = false
+            }
         }
         if (this.intersected === false) {
             if (this.bounds.x >= player.bounds.x) {
@@ -91,6 +95,7 @@ class Player {
         this.speed = 2;
         this.size = 25;
         this.helth = 100
+        this.alive = true;
     }
     draw() {
         ctx.fillStyle = "#5a473e"
@@ -119,11 +124,13 @@ class Player {
             if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
                 particalEngine.start_particles(this.bounds.x,this.bounds.y)
                 setTimeout(() => {
-                    alert("You Died!")
-                    location.reload();
-
+                    this.alive = false;
                 }, 50);
             }
+        }
+        if (this.alive === false) {
+            alert("You Died!")
+            location.reload();
         }
         if ( this.bounds.y < 0 ) {
             this.bounds.y = 0.5;
