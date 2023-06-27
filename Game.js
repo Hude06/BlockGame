@@ -26,7 +26,7 @@ class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
         this.speed = 1;
-        this.size = 25;
+        this.size = 15;
         this.intersected = false
         this.direction = 1
         this.damage = 2
@@ -36,8 +36,11 @@ class Boss {
         //4 = right
     }
     draw() {
-        ctx.fillStyle = " #d3473d "
-        ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+        ctx.beginPath();
+        ctx.arc(this.bounds.x+this.bounds.w/2, this.bounds.y+this.bounds.h/2, this.size, 0, 2 * Math.PI, false);
+        ctx.lineWidth = 3;
+        ctx.fillStyle = ' #d3473d ';
+        ctx.fill();
     }
     update() {
         for (let i = 0; i < deathBricks.length; i++) {
