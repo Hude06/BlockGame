@@ -3,7 +3,7 @@ import { ParticleSource } from "./Particals.js";
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
-let multiplyer = 20
+let multiplyer = 17
 let powerUpMultiplyer = 300;
 let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer); 
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
@@ -14,6 +14,7 @@ let time = document.getElementById("time")
 let elapsedTime = 0;
 let LEVEL_Data = [];
 let LEVELON = 0;
+let Shake = false;
 let roundedTime = Math.round(elapsedTime)
 
 const mm = document.getElementById("mmbtn");
@@ -28,6 +29,7 @@ class Boss {
         this.size = 25;
         this.intersected = false
         this.direction = 1
+        this.damage = 2
         //1 = up
         //2 = down
         //3 = left
@@ -46,6 +48,9 @@ class Boss {
                     this.intersected = false
                 }, 100);
             }
+        }
+        if (this.bounds.intersects(player.bounds) || player.bounds.intersects(this.bounds)) {
+            player.helth -= this.damage / 10 
         }
         if (this.intersected === false) {
             if (this.bounds.x >= player.bounds.x) {
@@ -85,10 +90,15 @@ class Player {
         this.bounds = new Rect(25,25,15,15);
         this.speed = 2;
         this.size = 25;
+        this.helth = 100
     }
     draw() {
         ctx.fillStyle = "#5a473e"
         ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+        ctx.strokeStyle = "black"
+        ctx.lineWidth = 3
+        ctx.strokeRect(20,10,200,40)
+        ctx.fillRect(20,10,this.helth*2,40)
     }
     update() {
         this.bounds.w += 0.01
@@ -112,7 +122,7 @@ class Player {
                     alert("You Died!")
                     location.reload();
 
-                }, 100);
+                }, 50);
             }
         }
         if ( this.bounds.y < 0 ) {
@@ -181,6 +191,12 @@ class Powerup {
             if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                 player.bounds.w /= 1.5
                 player.bounds.h /= 1.5
+                player.speed *= 1.2
+                Shake = true
+                setTimeout(() => {
+                    Shake = false;
+                }, 200);
+                  
                 this.visable = false;
                 particalEngine.start_particles(this.bounds.x,this.bounds.y)
             }
@@ -217,8 +233,9 @@ function JSON() {
     fetch('levels.json')
   .then(response => response.json())
   .then(data => {
+    console.log("RUNNNG")
     LEVEL_Data = data;
-    for (let i = 0; i < data.levels.length; i++) {            
+    for (let i = 0; i < data.levels.length; i++) {    
             const buttonName = document.createElement('button')
             buttonName.id = data.levels[i].name
             buttonName.innerHTML = i+1
@@ -226,18 +243,16 @@ function JSON() {
             document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
             document.getElementById(buttonName.id).style.background = "red";
             document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
-        boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
-        goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
-        player.bounds.w = data.levels[LEVELON].player[0].startingSize;
-        player.bounds.h = data.levels[LEVELON].player[0].startingSize;
-        setTimeout(() => {
             document.getElementById(buttonName.id).addEventListener("click",function(){
                 LEVELON = buttonName.id.slice(5, 100)-1;
-                console.log(LEVELON)
-                mode = "startGame"
+                boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
+                boss.damage = LEVEL_Data.levels[LEVELON].boss[0].damage;
+                goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
+                player.bounds.w = data.levels[LEVELON].player[0].startingSize;
+                player.bounds.h = data.levels[LEVELON].player[0].startingSize;
                 document.getElementById("LevelSelector").style.visibility = "hidden";
-            })          
-        }, 500);
+                mode = "startGame"
+            })
     }
   })
   .catch(error => {
@@ -274,20 +289,26 @@ function loop() {
         deathBricks = []
         powerups = []
         player.reset();
-        
         mode = "game";
     }
-    if (mode === "game") {        
+    if (mode === "game") {       
+        ctx.save(); 
         document.getElementById("time").style.visibility = "visible"
         elapsedTime += 0.0166
 
         time.innerHTML = Math.round(elapsedTime)
         //DRAW
+        if (Shake) {
+            var dx = Math.random()*30;
+            var dy = Math.random()*30;
+            ctx.translate(dx, dy);
+        }
         particalEngine.draw_particles(ctx,238, 134, 149)
         goldKey.draw(ctx);
         goldKey.update();
         player.draw(ctx);
         boss.draw(ctx);
+        ctx.restore();
         //UPDATE
         particalEngine.update_particles();
         player.update();
@@ -305,36 +326,16 @@ function loop() {
 
     }
     if (mode === "levelSelector") {
-        document.getElementById("LevelSelector").style.visibility = "visible";
+        document.getElementById("LevelSelector").style.visibility = "visible"
     }
     requestAnimationFrame(loop)
 }
 function init() {
-    mm.addEventListener("click", function (){
-        mode = "menu";
-        document.getElementById("winScreen").style.visibility = "hidden";
-    });
-    ls.addEventListener("click", function (){
-        mode = "levelSelector";
-        JSON();
-
-        document.getElementById("winScreen").style.visibility = "hidden";
-    });
-    ta.addEventListener("click", function (){
-        mode = "startGame";
-        JSON();
-        document.getElementById("winScreen").style.visibility = "hidden";
-    });
-    nl.addEventListener("click", function (){
-        LEVELON += 1;
-        JSON();
-        mode = "startGame";
-        document.getElementById("winScreen").style.visibility = "hidden";
-    });
     JSON();
     document.getElementById("LevelSelectorButton").addEventListener("click",function(){
         mode = "levelSelector"
-        document.getElementById("LevelSelector").style.visibility = "visible";
+        document.getElementById("LevelSelector").style.visibility = "visible"
+        console.log(mode)
     })
     document.getElementById("Start").addEventListener("click",function(){
         mode = "game"

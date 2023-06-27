@@ -5,7 +5,8 @@
         "name": "Level1",
         "boss": [
         {
-            "speed": 1
+            "speed": 1,
+            "damage": 1
         }],
         "TimeToWin": 15,
         "player": [
@@ -19,7 +20,8 @@
         "name": "Level2",
         "boss": [
             {
-                "speed": 2
+              "damage": 2,
+              "speed": 1.5
             }],
           "TimeToWin": 30,
           "player": [
@@ -33,7 +35,8 @@
         "name": "Level3",
         "boss": [
             {
-                "speed": 3
+                "speed": 2,
+                "damage": 3
             }],
         "TimeToWin": 45,
         "player": [
@@ -47,7 +50,9 @@
         "name": "Level4",
         "boss": [
             {
-                "speed": 4
+                "speed": 3,
+                "damage": 4
+
             }],
           "TimeToWin": 60,
           "player": [
