@@ -13,7 +13,7 @@ let mode = "menu";
 let time = document.getElementById("time")
 let elapsedTime = 0;
 let LEVEL_Data = [];
-let LEVELON = 0;
+let LEVELON = 1;
 let Shake = false;
 let roundedTime = Math.round(elapsedTime)
 
@@ -91,6 +91,9 @@ class Boss {
             }
         }
 }
+    reset() {
+        
+    }
 }
 class Player {
     constructor() {
@@ -126,7 +129,6 @@ class Player {
         }
         for (let i = 0; i < deathBricks.length; i++) {
             if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
-                particalEngine.start_particles(this.bounds.x,this.bounds.y)
                 setTimeout(() => {
                     this.alive = false;
                 }, 50);
@@ -134,7 +136,7 @@ class Player {
         }
         if (this.alive === false) {
             alert("You Died!")
-            location.reload();
+            mode = "menu";
         }
         if ( this.bounds.y < 0 ) {
             this.bounds.y = 0.5;
@@ -156,6 +158,7 @@ class Player {
         this.bounds.h = 15
         this.speed = 2;
         this.size = 25;
+        this.alive = true;
     }
 }
 class GoldKey {
@@ -174,12 +177,17 @@ class GoldKey {
         }
     }
     update() {
+        console.log()
         if (roundedTime >= this.TimeToShow) {
             if (this.visable === true) {
                 if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                     this.visable = false;
-                    mode = "win"
-                    document.getElementById("winScreen").style.visibility = "visible";
+                    mode = "menu"
+                    LEVELON += 1
+                    // if (LEVELON === 1) {
+                    //     LEVEL_Data.levels[LEVELON]
+                    //     console.log(LEVEL_Data.levels[i].Unlocked)
+                    // }
                 }
             }
         }
@@ -246,24 +254,26 @@ function JSON() {
   .then(data => {
     console.log("RUNNNG")
     LEVEL_Data = data;
-    for (let i = 0; i < data.levels.length; i++) {    
+    for (let i = 0; i < data.levels.length; i++) {
             const buttonName = document.createElement('button')
             buttonName.id = data.levels[i].name
             buttonName.innerHTML = i+1
-            document.getElementById('LevelSelector').appendChild(buttonName);
-            document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
-            document.getElementById(buttonName.id).style.background = "red";
-            document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
-            document.getElementById(buttonName.id).addEventListener("click",function(){
-                LEVELON = buttonName.id.slice(5, 100)-1;
-                boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
-                boss.damage = LEVEL_Data.levels[LEVELON].boss[0].damage;
-                goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
-                player.bounds.w = data.levels[LEVELON].player[0].startingSize;
-                player.bounds.h = data.levels[LEVELON].player[0].startingSize;
-                document.getElementById("LevelSelector").style.visibility = "hidden";
-                mode = "startGame"
+            if (data.levels[i].Unlocked) {
+                document.getElementById('LevelSelector').appendChild(buttonName);
+                document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
+                document.getElementById(buttonName.id).style.background = "red";
+                document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
+                document.getElementById(buttonName.id).addEventListener("click",function(){
+                    LEVELON = buttonName.id.slice(5, 100)-1;
+                    boss.speed = LEVEL_Data.levels[LEVELON-1].boss[0].speed;
+                    boss.damage = LEVEL_Data.levels[LEVELON-1].boss[0].damage;
+                    goldKey.TimeToShow = data.levels[LEVELON-1].TimeToWin;
+                    player.bounds.w = data.levels[LEVELON-1].player[0].startingSize;
+                    player.bounds.h = data.levels[LEVELON-1].player[0].startingSize;
+                    document.getElementById("LevelSelector").style.visibility = "hidden";
+                    mode = "startGame"
             })
+        }
     }
   })
   .catch(error => {
@@ -296,10 +306,11 @@ function loop() {
         document.getElementById("menu").style.visibility = "hidden"
     }
     if (mode === "startGame") {
-        elapsedTime = 0
-        deathBricks = []
-        powerups = []
+        elapsedTime = 0;
+        deathBricks = [];
+        powerups = [];
         player.reset();
+        goldKey.visable = true;
         mode = "game";
     }
     if (mode === "game") {       
@@ -349,7 +360,7 @@ function init() {
         console.log(mode)
     })
     document.getElementById("Start").addEventListener("click",function(){
-        mode = "game"
+        mode = "startGame"
     })
     keyboardInit();
     loop()
