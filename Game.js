@@ -9,13 +9,67 @@ let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer);
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
 let PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer)
 let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
-let mode = "menu";
+let mode = "store";
 let time = document.getElementById("time")
 let elapsedTime = 0;
 let LEVEL_Data = [];
 let LEVELON = 0;
 let Shake = false;
 let roundedTime = Math.round(elapsedTime)
+let CoinFlip;
+let LEVELS_Unlocked = 0;
+let shards = []
+let FragsELEMENT = document.getElementById("frags")
+function updateMousePosition(event) {
+    // Update the mouse position variables
+    let rect = event.target.getBoundingClientRect()
+    let x = event.clientX
+    let y = event.clientY
+    x = x - rect.x
+    y = y - rect.y
+    x = x*(canvas.width/rect.width)
+    y = y*(canvas.height/rect.height)
+    mouse.bounds.x = x -5
+    mouse.bounds.y = y -5
+}
+function handleMouseDown(event) {
+    if (event.button === 0) {
+        mouse.clicked = true;
+    }
+}
+function handleMouseUp(event) {
+    if (event.button === 0) {
+        mouse.clicked = false;
+    }
+}
+class Button {
+    constructor() {
+        this.bounds = new Rect(canvas.width/2-20,10,200,40)
+    }
+    draw(text) {
+        ctx.fillStyle = "white"
+        ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+    }
+}
+class Mouse {
+    constructor() {
+        this.bounds = new Rect(10,10,10,10)
+        this.clicked = false;
+    }
+    draw() {
+        // ctx.fillStyle = "white"
+        // ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+        // console.log(this.clicked)
+    }
+    clickOn(button) {
+        if (button.bounds.intersects(this.bounds) || this.bounds.intersects(button.bounds)) {
+            if (this.clicked === true) {
+                return true
+            }
+        }
+
+    }
+}
 class Shard {
     constructor() {
         this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
@@ -34,7 +88,7 @@ class Shard {
     update() {
         if (this.visable === true) {
             if (this.bounds.intersects(player.bounds) || player.bounds.intersects(this.bounds)) {
-                player.Frags += 1;
+                player.LevelFrags += 1;
                 this.visable = false;
             }
         }
@@ -123,6 +177,7 @@ class Player {
         this.helth = 100
         this.alive = true;
         this.Frags = 0;
+        this.LevelFrags = 0;
         this.invicable = false;
         this.dash = true;
     }
@@ -136,6 +191,7 @@ class Player {
         ctx.strokeRect(20,15,200,40)
     }
     update() {
+        FragsELEMENT.innerHTML = this.Frags
         this.bounds.w += 0.02
         this.bounds.h += 0.02
         if (currentKey.get("w") ) {
@@ -202,7 +258,6 @@ class Player {
         this.alive = true;
     }
 }
-let LEVELS_Unlocked = 0;
 class GoldKey {
     constructor() {
         this.bounds = new Rect(200, 200,25,25);
@@ -226,8 +281,8 @@ class GoldKey {
             if (this.visable === true) {
                 if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                     this.visable = false;
+                    player.Frags += player.LevelFrags
                     LEVELS_Unlocked += 1
-                    console.log("Runing")
                     LEVEL_Data.levels[LEVELS_Unlocked].Unlocked = true
                     JSON();
                     mode = "menu"
@@ -277,7 +332,6 @@ class DeathBrick {
     update() {
     }
 }
-let CoinFlip;
 function MakePowerupsAndBricks() {
     if (RandomNumDeathBrick === NumToMatchDeathBrick) {
         deathBricks.push(new DeathBrick());
@@ -287,13 +341,11 @@ function MakePowerupsAndBricks() {
     }
     if (PowerupRandomNum === NumToMatchPowerUp) {
         CoinFlip = Math.floor(Math.random() * 3)+1
-        console.log(CoinFlip)
          if (CoinFlip === 2 || 3) {
             powerups.push(new Powerup());
             NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
          };      
          if (CoinFlip === 1) {
-            console.log("DRAWING")
             shards.push(new Shard());
             NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
          } 
@@ -301,7 +353,6 @@ function MakePowerupsAndBricks() {
         PowerupRandomNum = Math.floor(Math.random() * powerUpMultiplyer);
     }
 }
-let shards = []
 function JSON() {
     fetch('levels.json')
   .then(response => response.json())
@@ -340,6 +391,9 @@ let player = new Player();
 let goldKey = new GoldKey();
 let boss = new Boss();
 let particalEngine = new ParticleSource();
+let mouse = new Mouse();
+let button1 = new Button();
+
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
         currentKey.set(event.key, true);
@@ -354,15 +408,20 @@ function loop() {
     if (mode === "menu") {
         document.getElementById("menu").style.visibility = "visible"
         document.getElementById("time").style.visibility = "hidden"
+        FragsELEMENT.style.visibility = "visible"
+
     }
     if (mode != "menu") {
         document.getElementById("menu").style.visibility = "hidden"
+        FragsELEMENT.style.visibility = "hidden"
+
     }
     if (mode === "startGame") {
         elapsedTime = 0;
         deathBricks = [];
         powerups = [];
         shards = []
+        player.LevelFrags = 0;
         player.reset();
         boss.reset();
         goldKey.visable = true;
@@ -389,6 +448,7 @@ function loop() {
         }
         player.draw(ctx);
         boss.draw(ctx);
+        mouse.draw();
         ctx.restore();
         //UPDATE
         particalEngine.update_particles();
@@ -409,13 +469,37 @@ function loop() {
     if (mode === "levelSelector") {
         document.getElementById("LevelSelector").style.visibility = "visible"
     }
+    if (mode === "store") {
+        ctx.fillStyle = "gray"
+        ctx.fillRect(0,0,canvas.width,canvas.height)
+        button1.draw();        
+        mouse.draw();
+        if (mouse.clickOn(button1) === true) {
+            console.log("clicked pn")
+        }
+ 
+
+        document.getElementById("Store").style.visibility = "visible"
+    }
     requestAnimationFrame(loop)
 }
 function init() {
     JSON();
+    canvas.addEventListener("mousedown", function(event) {
+        handleMouseDown(event);
+    });
+    canvas.addEventListener("mouseup", function(event) {
+        handleMouseUp(event);
+    });
+    canvas.addEventListener("mousemove", function(event) {
+        updateMousePosition(event);
+    });
     document.getElementById("LevelSelectorButton").addEventListener("click",function(){
         mode = "levelSelector"
         document.getElementById("LevelSelector").style.visibility = "visible"
+    })
+    document.getElementById("StoreButton").addEventListener("click",function(){
+        mode = "store"
     })
     document.getElementById("Start").addEventListener("click",function(){
         mode = "levelSelector"

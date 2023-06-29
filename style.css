@@ -1,6 +1,10 @@
 body {
     background-color:   #f5efeb  ;
 }
+#Store {
+    visibility: hidden;
+
+}
 button {
     z-index: 1;
     font-size: 3vmin;
@@ -10,6 +14,11 @@ button {
     height: 10vmin;
     background-color: aqua;
     margin: 1vmin;
+}
+#frags {
+    position: absolute;
+    left: 4%;
+    top: 2%;
 }
 #menu {
     visibility: visible;
