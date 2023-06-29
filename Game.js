@@ -1,5 +1,6 @@
 import {Rect} from "./RectUtils.js"
 import { ParticleSource } from "./Particals.js";
+import { Mouse,Button } from "./MouseEngine.js";
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
@@ -40,34 +41,6 @@ function handleMouseDown(event) {
 function handleMouseUp(event) {
     if (event.button === 0) {
         mouse.clicked = false;
-    }
-}
-class Button {
-    constructor() {
-        this.bounds = new Rect(canvas.width/2-20,10,200,40)
-    }
-    draw(text) {
-        ctx.fillStyle = "white"
-        ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-    }
-}
-class Mouse {
-    constructor() {
-        this.bounds = new Rect(10,10,10,10)
-        this.clicked = false;
-    }
-    draw() {
-        // ctx.fillStyle = "white"
-        // ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-        // console.log(this.clicked)
-    }
-    clickOn(button) {
-        if (button.bounds.intersects(this.bounds) || this.bounds.intersects(button.bounds)) {
-            if (this.clicked === true) {
-                return true
-            }
-        }
-
     }
 }
 class Shard {
@@ -472,10 +445,10 @@ function loop() {
     if (mode === "store") {
         ctx.fillStyle = "gray"
         ctx.fillRect(0,0,canvas.width,canvas.height)
-        button1.draw();        
+        button1.draw(ctx,"Speed +1");        
         mouse.draw();
         if (mouse.clickOn(button1) === true) {
-            console.log("clicked pn")
+            mode = "menu"
         }
  
 
