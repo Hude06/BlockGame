@@ -3,7 +3,7 @@ import { ParticleSource } from "./Particals.js";
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
-let multiplyer = 17
+let multiplyer = 6
 let powerUpMultiplyer = 300;
 let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer); 
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
@@ -16,12 +16,6 @@ let LEVEL_Data = [];
 let LEVELON = 0;
 let Shake = false;
 let roundedTime = Math.round(elapsedTime)
-
-const mm = document.getElementById("mmbtn");
-const ls = document.getElementById("lsbtn");
-const ta = document.getElementById("lsbtn");
-const nl = document.getElementById("nlbtn");
-
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
@@ -104,19 +98,20 @@ class Player {
         this.size = 25;
         this.helth = 100
         this.alive = true;
+        this.Frags = 0;
     }
     draw() {
         ctx.fillStyle = "#5a473e"
         ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-        ctx.strokeStyle = "black"
-        ctx.lineWidth = 3
-        ctx.strokeRect(20,10,200,40)
         ctx.fillStyle = "green"
-        ctx.fillRect(20,10,this.helth*2,40)
+        ctx.fillRect(20,10+5,this.helth*2,40)
+        ctx.strokeStyle = "black"
+        ctx.lineWidth = 5
+        ctx.strokeRect(20,15,200,40)
     }
     update() {
-        this.bounds.w += 0.01
-        this.bounds.h += 0.01
+        this.bounds.w += 0.02
+        this.bounds.h += 0.02
         if (currentKey.get("w") ) {
             this.bounds.y -= this.speed;
         }
@@ -133,6 +128,7 @@ class Player {
             if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
                 setTimeout(() => {
                     this.alive = false;
+                    currentKey.clear();
                 }, 50);
             }
         }
@@ -221,7 +217,6 @@ class Powerup {
                 }, 200);
                   
                 this.visable = false;
-                particalEngine.start_particles(this.bounds.x,this.bounds.y)
             }
         }
     }
@@ -322,7 +317,6 @@ function loop() {
         ctx.save(); 
         document.getElementById("time").style.visibility = "visible"
         elapsedTime += 0.0166
-
         time.innerHTML = Math.round(elapsedTime)
         //DRAW
         if (Shake) {
