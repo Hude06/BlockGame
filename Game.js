@@ -99,6 +99,8 @@ class Player {
         this.helth = 100
         this.alive = true;
         this.Frags = 0;
+        this.invicable = false;
+        this.dash = true;
     }
     draw() {
         ctx.fillStyle = "#5a473e"
@@ -124,12 +126,30 @@ class Player {
         if (currentKey.get("d")) {
             this.bounds.x += this.speed;
         }
-        for (let i = 0; i < deathBricks.length; i++) {
-            if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
+        if (this.dash === true) {
+            if (currentKey.get("Shift")) {
+                this.speed = 8
+                this.invicable = true
+                this.dash = false
                 setTimeout(() => {
-                    this.alive = false;
-                    currentKey.clear();
-                }, 50);
+                    this.speed = 2
+                    this.invicable = false
+                }, 125);
+                setTimeout(() => {
+                    this.dash = true
+                }, 1500);
+            }
+        }
+        console.log(this.dash)
+
+        if (this.invicable === false) {
+            for (let i = 0; i < deathBricks.length; i++) {
+                if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
+                    setTimeout(() => {
+                        this.alive = false;
+                        currentKey.clear();
+                    }, 50);
+                }
             }
         }
         if (this.alive === false) {
@@ -311,6 +331,7 @@ function loop() {
         player.reset();
         boss.reset();
         goldKey.visable = true;
+        currentKey.clear();
         mode = "game";
     }
     if (mode === "game") {       
