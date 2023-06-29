@@ -18,7 +18,7 @@ let Shake = false;
 let roundedTime = Math.round(elapsedTime)
 class Shard {
     constructor() {
-        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,35,35);
+        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
         this.visable = false;
         this.image = new Image();
         this.image.src = "./Shards.png"
@@ -27,7 +27,8 @@ class Shard {
     draw() {
         if (this.visable === true) {
             ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(this.image,this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+            ctx.fillStyle = "#ffb700"
+            ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
         }
     }
     update() {
@@ -116,9 +117,9 @@ class Boss {
 }
 class Player {
     constructor() {
-        this.bounds = new Rect(200,300,15,15);
+        this.bounds = new Rect(200,300,50,50);
         this.speed = 2;
-        this.size = 25;
+        this.size = 50;
         this.helth = 100
         this.alive = true;
         this.Frags = 0;
@@ -193,10 +194,10 @@ class Player {
     reset() {
         this.bounds.x = 200;
         this.bounds.y = 300;
-        this.bounds.w = 15
-        this.bounds.h = 15
+        this.bounds.w = 18;
+        this.bounds.h = 18;
         this.speed = 2;
-        this.size = 25;
+        this.size = 18;
         this.helth = 100;
         this.alive = true;
     }
@@ -212,8 +213,11 @@ class GoldKey {
     draw() {
         if (roundedTime >= this.TimeToShow) {
             if (this.visable === true) {
-                ctx.fillStyle = "#f6ad0f"
+                ctx.strokeStyle = "gold"
+                ctx.lineWidth = 7
+                ctx.fillStyle = "black"
                 ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+                ctx.strokeRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
             }
         }
     }
@@ -223,9 +227,8 @@ class GoldKey {
                 if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                     this.visable = false;
                     LEVELS_Unlocked += 1
-                    if (LEVELON === 1) {
-                        LEVEL_Data.levels[LEVELS_Unlocked].Unlocked = true
-                    }
+                    console.log("Runing")
+                    LEVEL_Data.levels[LEVELS_Unlocked].Unlocked = true
                     JSON();
                     mode = "menu"
 
@@ -265,7 +268,7 @@ class Powerup {
 class DeathBrick {
     constructor() {
         this.random = Math.floor(Math.random() * 25)+5
-        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100,Math.floor(Math.random() * canvas.height-100)+100,10,10);
+        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100,Math.floor(Math.random() * canvas.height-100)+100,15,15);
     }
     draw() {
         ctx.fillStyle = "#316a96"
@@ -283,9 +286,9 @@ function MakePowerupsAndBricks() {
         RandomNumDeathBrick = Math.floor(Math.random() * multiplyer);
     }
     if (PowerupRandomNum === NumToMatchPowerUp) {
-        CoinFlip = Math.floor(Math.random() * 2)+1
+        CoinFlip = Math.floor(Math.random() * 3)+1
         console.log(CoinFlip)
-         if (CoinFlip === 2) {
+         if (CoinFlip === 2 || 3) {
             powerups.push(new Powerup());
             NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
          };      
@@ -313,7 +316,8 @@ function JSON() {
                 document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
                 document.getElementById(buttonName.id).style.background = "red";
                 document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
-                document.getElementById(buttonName.id).addEventListener("click",function(){              LEVELON = buttonName.id.slice(5, 100)-1;
+                document.getElementById(buttonName.id).addEventListener("click",function(){              
+                    LEVELON = buttonName.id.slice(5, 100)-1;
                     boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
                     boss.damage = LEVEL_Data.levels[LEVELON].boss[0].damage;
                     goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
@@ -358,7 +362,7 @@ function loop() {
         elapsedTime = 0;
         deathBricks = [];
         powerups = [];
-        shards = [];
+        shards = []
         player.reset();
         boss.reset();
         goldKey.visable = true;
