@@ -99,7 +99,7 @@ class Boss {
 }
 class Player {
     constructor() {
-        this.bounds = new Rect(25,25,15,15);
+        this.bounds = new Rect(200,300,15,15);
         this.speed = 2;
         this.size = 25;
         this.helth = 100
@@ -154,8 +154,8 @@ class Player {
         }
     }
     reset() {
-        this.bounds.x = 25;
-        this.bounds.y = 25
+        this.bounds.x = 200;
+        this.bounds.y = 300;
         this.bounds.w = 15
         this.bounds.h = 15
         this.speed = 2;
@@ -268,13 +268,12 @@ function JSON() {
                 document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
                 document.getElementById(buttonName.id).style.background = "red";
                 document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
-                LEVELON = buttonName.id.slice(5, 100)-1;
-                boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
-                boss.damage = LEVEL_Data.levels[LEVELON].boss[0].damage;
-                goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
-                player.bounds.w = data.levels[LEVELON].player[0].startingSize;
-                player.bounds.h = data.levels[LEVELON].player[0].startingSize;
-                document.getElementById(buttonName.id).addEventListener("click",function(){
+                document.getElementById(buttonName.id).addEventListener("click",function(){              LEVELON = buttonName.id.slice(5, 100)-1;
+                    boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
+                    boss.damage = LEVEL_Data.levels[LEVELON].boss[0].damage;
+                    goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
+                    player.bounds.w = data.levels[LEVELON].player[0].startingSize;
+                    player.bounds.h = data.levels[LEVELON].player[0].startingSize;
                     document.getElementById("LevelSelector").style.visibility = "hidden";
                     mode = "startGame"
             })
@@ -365,7 +364,7 @@ function init() {
         document.getElementById("LevelSelector").style.visibility = "visible"
     })
     document.getElementById("Start").addEventListener("click",function(){
-        mode = "startGame"
+        mode = "levelSelector"
     })
     keyboardInit();
     loop()
