@@ -3,7 +3,7 @@ import { ParticleSource } from "./Particals.js";
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
-let multiplyer = 6
+let multiplyer = 10
 let powerUpMultiplyer = 300;
 let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer); 
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
@@ -16,6 +16,29 @@ let LEVEL_Data = [];
 let LEVELON = 0;
 let Shake = false;
 let roundedTime = Math.round(elapsedTime)
+class Shard {
+    constructor() {
+        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,35,35);
+        this.visable = false;
+        this.image = new Image();
+        this.image.src = "./Shards.png"
+        this.visable = true
+    }
+    draw() {
+        if (this.visable === true) {
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(this.image,this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+        }
+    }
+    update() {
+        if (this.visable === true) {
+            if (this.bounds.intersects(player.bounds) || player.bounds.intersects(this.bounds)) {
+                player.Frags += 1;
+                this.visable = false;
+            }
+        }
+    }
+}
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
@@ -140,8 +163,6 @@ class Player {
                 }, 1500);
             }
         }
-        console.log(this.dash)
-
         if (this.invicable === false) {
             for (let i = 0; i < deathBricks.length; i++) {
                 if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
@@ -253,6 +274,7 @@ class DeathBrick {
     update() {
     }
 }
+let CoinFlip;
 function MakePowerupsAndBricks() {
     if (RandomNumDeathBrick === NumToMatchDeathBrick) {
         deathBricks.push(new DeathBrick());
@@ -261,12 +283,22 @@ function MakePowerupsAndBricks() {
         RandomNumDeathBrick = Math.floor(Math.random() * multiplyer);
     }
     if (PowerupRandomNum === NumToMatchPowerUp) {
-        powerups.push(new Powerup());
-        NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
+        CoinFlip = Math.floor(Math.random() * 2)+1
+        console.log(CoinFlip)
+         if (CoinFlip === 2) {
+            powerups.push(new Powerup());
+            NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
+         };      
+         if (CoinFlip === 1) {
+            console.log("DRAWING")
+            shards.push(new Shard());
+            NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
+         } 
     } else {
         PowerupRandomNum = Math.floor(Math.random() * powerUpMultiplyer);
     }
 }
+let shards = []
 function JSON() {
     fetch('levels.json')
   .then(response => response.json())
@@ -275,10 +307,8 @@ function JSON() {
     for (let i = 0; i < data.levels.length; i++) {
             const buttonName = document.createElement('button')
             if (data.levels[i].Unlocked) {
-                console.log(data.levels[i].Unlocked)
                 buttonName.id = data.levels[LEVELS_Unlocked].name
                 buttonName.innerHTML = LEVELS_Unlocked+1
-                console.log(buttonName.id)
                 document.getElementById('LevelSelector').appendChild(buttonName);
                 document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
                 document.getElementById(buttonName.id).style.background = "red";
@@ -328,6 +358,7 @@ function loop() {
         elapsedTime = 0;
         deathBricks = [];
         powerups = [];
+        shards = [];
         player.reset();
         boss.reset();
         goldKey.visable = true;
@@ -348,6 +379,10 @@ function loop() {
         particalEngine.draw_particles(ctx,238, 134, 149)
         goldKey.draw(ctx);
         goldKey.update();
+        for (let i = 0; i < shards.length; i++) {
+            shards[i].draw();
+            shards[i].update();
+        }
         player.draw(ctx);
         boss.draw(ctx);
         ctx.restore();
