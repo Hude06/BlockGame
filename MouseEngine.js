@@ -4,14 +4,16 @@ export class Button {
         this.scale = 2
         this.bounds = new Rect(canvas.width/2-this.scale*100,10,200,40)
     }
-    draw(ctx,text) {
+    draw(ctx,text,scale) {
+        this.scale = scale;
+        this.bounds.x = (canvas.width/2-this.scale*100)
         this.bounds.w = this.scale * 200;
         this.bounds.h = this.scale * 50;
         ctx.fillStyle = "white"
         ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
         ctx.fillStyle = "black"
-        ctx.font = this.bounds.w/5 + "px serif";
-        ctx.fillText(text, this.bounds.x+this.bounds.w/10, this.bounds.y+this.bounds.h-this.scale*13);
+        ctx.font = text.length*this.scale + "px serif";
+        ctx.fillText(text, this.bounds.x+text.length*this.scale*4.3, this.bounds.y+text.length*this.scale*2);
     }
 }
 export class Mouse {

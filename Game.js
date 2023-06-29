@@ -10,7 +10,7 @@ let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer);
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
 let PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer)
 let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
-let mode = "store";
+let mode = "menu";
 let time = document.getElementById("time")
 let elapsedTime = 0;
 let LEVEL_Data = [];
@@ -149,10 +149,11 @@ class Player {
         this.size = 50;
         this.helth = 100
         this.alive = true;
-        this.Frags = 0;
+        this.Frags = 10000;
         this.LevelFrags = 0;
         this.invicable = false;
         this.dash = true;
+        this.tempSpeed = 2;
     }
     draw() {
         ctx.fillStyle = "#5a473e"
@@ -164,9 +165,9 @@ class Player {
         ctx.strokeRect(20,15,200,40)
     }
     update() {
-        FragsELEMENT.innerHTML = this.Frags
         this.bounds.w += 0.02
         this.bounds.h += 0.02
+        this.tempSpeed = this.speed;
         if (currentKey.get("w") ) {
             this.bounds.y -= this.speed;
         }
@@ -181,11 +182,11 @@ class Player {
         }
         if (this.dash === true) {
             if (currentKey.get("Shift")) {
-                this.speed = 8
+                this.tempSpeed = 8
                 this.invicable = true
                 this.dash = false
                 setTimeout(() => {
-                    this.speed = 2
+                    this.tempSpeed = 2
                     this.invicable = false
                 }, 125);
                 setTimeout(() => {
@@ -225,7 +226,7 @@ class Player {
         this.bounds.y = 300;
         this.bounds.w = 18;
         this.bounds.h = 18;
-        this.speed = 2;
+        this.tempSpeed = 2;
         this.size = 18;
         this.helth = 100;
         this.alive = true;
@@ -378,6 +379,7 @@ function keyboardInit() {
 function loop() {
     roundedTime = Math.round(elapsedTime)
     ctx.clearRect(0,0,canvas.width,canvas.height)
+    FragsELEMENT.innerHTML = ""+Math.round(player.Frags);
     if (mode === "menu") {
         document.getElementById("menu").style.visibility = "visible"
         document.getElementById("time").style.visibility = "hidden"
@@ -445,9 +447,13 @@ function loop() {
     if (mode === "store") {
         ctx.fillStyle = "gray"
         ctx.fillRect(0,0,canvas.width,canvas.height)
-        button1.draw(ctx,"Speed +1");        
+        button1.draw(ctx,"Speed +1 , -1$",2);        
         mouse.draw();
         if (mouse.clickOn(button1) === true) {
+            player.speed += 0.1;
+            player.Frags = player.Frags -= 0.2;
+        }
+        if (currentKey.get("m")) {
             mode = "menu"
         }
  
