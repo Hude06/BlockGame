@@ -366,7 +366,9 @@ let goldKey = new GoldKey();
 let boss = new Boss();
 let particalEngine = new ParticleSource();
 let mouse = new Mouse();
-let button1 = new Button();
+let SpeedUpgradeButton = new Button();
+let BackButton = new Button();
+
 
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
@@ -447,18 +449,38 @@ function loop() {
     if (mode === "store") {
         ctx.fillStyle = "gray"
         ctx.fillRect(0,0,canvas.width,canvas.height)
-        button1.draw(ctx,"Speed +1 , -1$",2);        
-        mouse.draw();
-        if (mouse.clickOn(button1) === true) {
+        SpeedUpgradeButton.draw(ctx,"Speed +1 , -1$",450,10,700,70,"black",4);        
+        if (mouse.clickOn(SpeedUpgradeButton) === true) {
             player.speed += 0.1;
             player.Frags = player.Frags -= 0.2;
         }
-        if (currentKey.get("m")) {
+        BackButton.draw(ctx,"Back",canvas.width/2+650,10,100,70,"black",6);
+        ctx.fillStyle = "black"  
+        if (mouse.clickOn(BackButton) === true) {
             mode = "menu"
         }
  
 
         document.getElementById("Store").style.visibility = "visible"
+    }
+    if (mode === "About") {
+        BackButton.draw(ctx,"Back",canvas.width/2+650,10,100,70,"black",6);
+        ctx.fillStyle = "black"  
+        if (mouse.clickOn(BackButton) === true) {
+            mode = "menu"
+        }
+        ctx.font = "100px Impact";
+        ctx.fillText("How to Play",canvas.width/2,100)  
+        ctx.font = "70px Impact";
+
+        ctx.fillText("Controlls",canvas.width/2,200)  
+
+        ctx.font = "35px 'Lato'";
+        ctx.fillText("W A S D, Or Arrow Keys to Move",canvas.width/2,250)  
+
+        ctx.fillText("You control a square character in a world where enemy squares are falling from the sky.",canvas.width/2,300)  
+        ctx.fillText("Your Goal is to stay alive until you see a gold checkpoin, You goal is to stay alive and comlete the level",canvas.width/2,350)  
+
     }
     requestAnimationFrame(loop)
 }
@@ -476,6 +498,9 @@ function init() {
     document.getElementById("LevelSelectorButton").addEventListener("click",function(){
         mode = "levelSelector"
         document.getElementById("LevelSelector").style.visibility = "visible"
+    })
+    document.getElementById("About").addEventListener("click",function(){
+        mode = "About"
     })
     document.getElementById("StoreButton").addEventListener("click",function(){
         mode = "store"
