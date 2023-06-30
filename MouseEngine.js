@@ -41,7 +41,6 @@ export class Mouse {
     draw() {
         // ctx.fillStyle = "white"
         // ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-        console.log(this.clicked)
     }
     clickOn(button) {
         if (button.bounds.intersects(this.bounds) || this.bounds.intersects(button.bounds)) {

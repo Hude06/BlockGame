@@ -149,7 +149,7 @@ class Player {
         this.size = 50;
         this.helth = 100
         this.alive = true;
-        this.Frags = 10000;
+        this.Frags = 2;
         this.LevelFrags = 0;
         this.invicable = false;
         this.dash = true;
@@ -164,35 +164,26 @@ class Player {
         ctx.lineWidth = 5
         ctx.strokeRect(20,15,200,40)
     }
+    init() {
+        this.tempSpeed = this.speed;
+        console.log("Inital"+this.tempSpeed)
+    } 
     update() {
         this.bounds.w += 0.02
         this.bounds.h += 0.02
-        this.tempSpeed = this.speed;
+        console.log(this.tempSpeed)
+
         if (currentKey.get("w") ) {
-            this.bounds.y -= this.speed;
+            this.bounds.y -= this.tempSpeed;
         }
         if (currentKey.get("s")) {
-            this.bounds.y += this.speed;
+            this.bounds.y += this.tempSpeed;
         }
         if (currentKey.get("a")) {
-            this.bounds.x -= this.speed;
+            this.bounds.x -= this.tempSpeed;
         }
         if (currentKey.get("d")) {
-            this.bounds.x += this.speed;
-        }
-        if (this.dash === true) {
-            if (currentKey.get("Shift")) {
-                this.tempSpeed = 8
-                this.invicable = true
-                this.dash = false
-                setTimeout(() => {
-                    this.tempSpeed = 2
-                    this.invicable = false
-                }, 125);
-                setTimeout(() => {
-                    this.dash = true
-                }, 1500);
-            }
+            this.bounds.x += this.tempSpeed;
         }
         if (this.invicable === false) {
             for (let i = 0; i < deathBricks.length; i++) {
@@ -226,7 +217,7 @@ class Player {
         this.bounds.y = 300;
         this.bounds.w = 18;
         this.bounds.h = 18;
-        this.tempSpeed = 2;
+        this.tempSpeed = this.speed;
         this.size = 18;
         this.helth = 100;
         this.alive = true;
@@ -283,7 +274,7 @@ class Powerup {
             if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                 player.bounds.w /= 1.5
                 player.bounds.h /= 1.5
-                player.speed *= 1.2
+                player.tempSpeed *= 1.2
                 Shake = true
                 setTimeout(() => {
                     Shake = false;
@@ -386,6 +377,7 @@ function loop() {
         document.getElementById("menu").style.visibility = "visible"
         document.getElementById("time").style.visibility = "hidden"
         FragsELEMENT.style.visibility = "visible"
+        player.init();
 
     }
     if (mode != "menu") {
@@ -405,7 +397,7 @@ function loop() {
         currentKey.clear();
         mode = "game";
     }
-    if (mode === "game") {       
+    if (mode === "game") {    
         ctx.save(); 
         document.getElementById("time").style.visibility = "visible"
         elapsedTime += 0.0166
@@ -451,8 +443,8 @@ function loop() {
         ctx.fillRect(0,0,canvas.width,canvas.height)
         SpeedUpgradeButton.draw(ctx,"Speed +1 , -1$",450,10,700,70,"black",4);        
         if (mouse.clickOn(SpeedUpgradeButton) === true) {
-            player.speed += 0.1;
-            player.Frags = player.Frags -= 0.2;
+            player.speed += 0.2;
+            player.Frags = player.Frags -= 0.1;
         }
         BackButton.draw(ctx,"Back",canvas.width/2+650,10,100,70,"black",6);
         ctx.fillStyle = "black"  
@@ -460,7 +452,6 @@ function loop() {
             mode = "menu"
         }
  
-
         document.getElementById("Store").style.visibility = "visible"
     }
     if (mode === "About") {
