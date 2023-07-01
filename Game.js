@@ -21,6 +21,30 @@ let CoinFlip;
 let LEVELS_Unlocked = 0;
 let shards = []
 let FragsELEMENT = document.getElementById("frags")
+const audioCtx = new AudioContext();
+const analyser = audioCtx.createAnalyser();
+const destination = audioCtx.destination;
+const music = new Audio();
+music.src = "./Assets/Music.mp3";
+const source = audioCtx.createMediaElementSource(music);
+source.connect(analyser);
+analyser.connect(destination);
+const distortion = audioCtx.createWaveShaper();
+distortion.connect(audioCtx.destination);
+analyser.fftSize = 512/8;
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
+analyser.getByteTimeDomainData(dataArray);
+music.addEventListener("canplay", () => {
+    music.volume = 0.7
+    music.play();
+});
+audio.addEventListener("ended", function() {
+    // Restart the playback from the beginning
+    music.volume = 0.7
+    audio.currentTime = 0;
+    audio.play();
+  });
 function updateMousePosition(event) {
     // Update the mouse position variables
     let rect = event.target.getBoundingClientRect()
@@ -149,11 +173,13 @@ class Player {
         this.size = 50;
         this.helth = 100
         this.alive = true;
-        this.Frags = 2;
+        this.Frags = 0;
         this.LevelFrags = 0;
         this.invicable = false;
         this.dash = true;
         this.tempSpeed = 2;
+        this.die = new Audio();
+        this.die.src = "./Assets/explosion.wav"
     }
     draw() {
         ctx.fillStyle = "#5a473e"
@@ -166,12 +192,10 @@ class Player {
     }
     init() {
         this.tempSpeed = this.speed;
-        console.log("Inital"+this.tempSpeed)
     } 
     update() {
         this.bounds.w += 0.02
         this.bounds.h += 0.02
-        console.log(this.tempSpeed)
 
         if (currentKey.get("w") ) {
             this.bounds.y -= this.tempSpeed;
@@ -185,14 +209,11 @@ class Player {
         if (currentKey.get("d")) {
             this.bounds.x += this.tempSpeed;
         }
-        if (this.invicable === false) {
-            for (let i = 0; i < deathBricks.length; i++) {
-                if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
-                    setTimeout(() => {
-                        this.alive = false;
-                        currentKey.clear();
-                    }, 50);
-                }
+        for (let i = 0; i < deathBricks.length; i++) {
+            if (deathBricks[i].bounds.intersects(this.bounds) || this.bounds.intersects(deathBricks[i].bounds)) {
+                    this.die.play();
+                    this.alive = false;
+                    currentKey.clear();
             }
         }
         if (this.alive === false) {
@@ -260,6 +281,8 @@ class Powerup {
     constructor() {
         this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
         this.visable = true;
+        this.coin = new Audio();
+        this.coin.src = "./Assets/Coin.wav"
     }
     draw() {
             if (this.visable === true) {
@@ -273,6 +296,7 @@ class Powerup {
                 player.bounds.w /= 1.5
                 player.bounds.h /= 1.5
                 player.tempSpeed *= 1.2
+                this.coin.play();
                 Shake = true
                 setTimeout(() => {
                     Shake = false;
@@ -286,11 +310,17 @@ class Powerup {
 class DeathBrick {
     constructor() {
         this.random = Math.floor(Math.random() * 25)+5
+        this.roundedY = 0;
         this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100,Math.floor(Math.random() * canvas.height-100)+100,15,15);
     }
     draw() {
         ctx.fillStyle = "#316a96"
-        ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
+        for (let i = 0; i < bufferLength; i++) {
+            const v = dataArray[i] / 128.0;
+            const y = v * (100);
+            this.roundedY = Math.floor(Math.round(y)/30)
+            ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w+this.roundedY,this.bounds.h+this.roundedY)
+        }
     }
     update() {
     }
@@ -368,6 +398,7 @@ function keyboardInit() {
     });
 }
 function loop() {
+    analyser.getByteTimeDomainData(dataArray);
     roundedTime = Math.round(elapsedTime)
     ctx.clearRect(0,0,canvas.width,canvas.height)
     FragsELEMENT.innerHTML = ""+Math.round(player.Frags);
