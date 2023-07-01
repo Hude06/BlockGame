@@ -229,7 +229,6 @@ class GoldKey {
         this.visable = true;
         this.TimeToShow = 15
     }
-
     draw() {
         if (roundedTime >= this.TimeToShow) {
             if (this.visable === true) {
@@ -262,7 +261,6 @@ class Powerup {
         this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
         this.visable = true;
     }
-
     draw() {
             if (this.visable === true) {
                 ctx.fillStyle = "green"
@@ -443,8 +441,12 @@ function loop() {
         ctx.fillRect(0,0,canvas.width,canvas.height)
         SpeedUpgradeButton.draw(ctx,"Speed +1 , -1$",450,10,700,70,"black",4);        
         if (mouse.clickOn(SpeedUpgradeButton) === true) {
-            player.speed += 0.2;
-            player.Frags = player.Frags -= 0.1;
+            if (player.Frags > 0) {
+                player.speed += 0.2;
+                player.Frags = player.Frags -= 0.1;
+            } else {
+                alert("You need at least One Frag")
+            }
         }
         BackButton.draw(ctx,"Back",canvas.width/2+650,10,100,70,"black",6);
         ctx.fillStyle = "black"  
