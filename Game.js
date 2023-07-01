@@ -39,11 +39,11 @@ music.addEventListener("canplay", () => {
     music.volume = 0.7
     music.play();
 });
-audio.addEventListener("ended", function() {
+music.addEventListener("ended", function() {
     // Restart the playback from the beginning
     music.volume = 0.7
-    audio.currentTime = 0;
-    audio.play();
+    music.currentTime = 0;
+    music.play();
   });
 function updateMousePosition(event) {
     // Update the mouse position variables
