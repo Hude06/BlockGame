@@ -67,30 +67,6 @@ function handleMouseUp(event) {
         mouse.clicked = false;
     }
 }
-class Shard {
-    constructor() {
-        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
-        this.visable = false;
-        this.image = new Image();
-        this.image.src = "./Shards.png"
-        this.visable = true
-    }
-    draw() {
-        if (this.visable === true) {
-            ctx.imageSmoothingEnabled = false;
-            ctx.fillStyle = "#ffb700"
-            ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-        }
-    }
-    update() {
-        if (this.visable === true) {
-            if (this.bounds.intersects(player.bounds) || player.bounds.intersects(this.bounds)) {
-                player.LevelFrags += 1;
-                this.visable = false;
-            }
-        }
-    }
-}
 class Boss {
     constructor() {
         this.bounds = new Rect(1000,200,20,20);
@@ -325,12 +301,12 @@ class DeathBrick {
         this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100,Math.floor(Math.random() * canvas.height-100)+100,15,15);
     }
     draw() {
-        ctx.fillStyle = "#316a96"
         for (let i = 0; i < bufferLength; i++) {
             const v = dataArray[i] / 128.0;
             const y = v * (100);
             this.roundedY = Math.floor(Math.round(y)/10)
-            ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w+this.roundedY,this.bounds.h+this.roundedY)
+            ctx.fillStyle = "#316a96"
+            ctx.fillRect(this.bounds.x-(this.roundedY/2),this.bounds.y-(this.roundedY/2),this.bounds.w+this.roundedY,this.bounds.h+this.roundedY)
         }
     }
     update() {

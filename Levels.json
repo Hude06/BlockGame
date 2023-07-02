@@ -46,7 +46,7 @@
             }],
             "Unlocked": false,
         "TimeToWin": 35,
-        "DeathBricksSpawnRate": 30,
+        "DeathBricksSpawnRate": 65,
 
         "player": [
           {
@@ -65,7 +65,7 @@
             }],
           "TimeToWin": 55,
           "Unlocked": false,
-          "DeathBricksSpawnRate": 15,
+          "DeathBricksSpawnRate": 50,
           "player": [
             {
               "startingSize":30
