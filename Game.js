@@ -318,7 +318,7 @@ class DeathBrick {
         for (let i = 0; i < bufferLength; i++) {
             const v = dataArray[i] / 128.0;
             const y = v * (100);
-            this.roundedY = Math.floor(Math.round(y)/30)
+            this.roundedY = Math.floor(Math.round(y)/10)
             ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w+this.roundedY,this.bounds.h+this.roundedY)
         }
     }
