@@ -9,7 +9,7 @@
             "damage": 1
     
         }],
-        "DeathBricksSpawnRate": 10,
+        "DeathBricksSpawnRate": 100,
         "Unlocked": true,
         "TimeToWin": 10,
         "player": [
@@ -26,7 +26,7 @@
               "damage": 2,
               "speed": 1.5
             }],
-          "DeathBricksSpawnRate": 10,
+          "DeathBricksSpawnRate": 75,
           "TimeToWin": 20,
           "Unlocked": false,
           "player": [
@@ -46,7 +46,7 @@
             }],
             "Unlocked": false,
         "TimeToWin": 35,
-        "DeathBricksSpawnRate": 10,
+        "DeathBricksSpawnRate": 30,
 
         "player": [
           {
@@ -65,7 +65,7 @@
             }],
           "TimeToWin": 55,
           "Unlocked": false,
-          "DeathBricksSpawnRate": 10,
+          "DeathBricksSpawnRate": 15,
           "player": [
             {
               "startingSize":30

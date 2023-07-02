@@ -4,12 +4,12 @@ import { Mouse,Button } from "./MouseEngine.js";
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
-let multiplyer = 20
+let multiplyer = 1;
 let powerUpMultiplyer = 300;
-let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer); 
-let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
-let PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer)
-let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
+let RandomNumDeathBrick = 0; 
+let NumToMatchDeathBrick = 0;
+let PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer+1)
+let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer+1)
 let mode = "menu";
 let time = document.getElementById("time")
 let elapsedTime = 0;
@@ -197,6 +197,10 @@ class Player {
         this.bounds.w = this.GameWidth;
         this.bounds.h = this.GameHeight;
         this.tempSpeed = this.speed;
+        RandomNumDeathBrick = Math.floor(Math.random() * multiplyer+1); 
+        NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer+1)
+        PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer+1);
+        NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer+1)
     } 
     update() {
         this.bounds.w += 0.02;
@@ -333,25 +337,21 @@ class DeathBrick {
     }
 }
 function MakePowerupsAndBricks() {
+    console.log(RandomNumDeathBrick,NumToMatchDeathBrick)
     if (RandomNumDeathBrick === NumToMatchDeathBrick) {
         deathBricks.push(new DeathBrick());
-        NumToMatchDeathBrick = Math.floor(Math.random() * multiplyer)
+        NumToMatchDeathBrick = Math.floor(Math.random() * multiplyer+1)
     } else {
-        RandomNumDeathBrick = Math.floor(Math.random() * multiplyer);
+        RandomNumDeathBrick = Math.floor(Math.random() * multiplyer+1);
     }
     if (PowerupRandomNum === NumToMatchPowerUp) {
-        CoinFlip = Math.floor(Math.random() * 3)+1
-         if (CoinFlip === 2 || 3) {
-            powerups.push(new Powerup());
-            NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
-         };      
-         if (CoinFlip === 1) {
-            shards.push(new Shard());
-            NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer)
-         } 
+        powerups.push(new Powerup());
+        NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer+1)
     } else {
-        PowerupRandomNum = Math.floor(Math.random() * powerUpMultiplyer);
+        NumToMatchPowerUp = Math.floor(Math.random() * powerUpMultiplyer+1);
+
     }
+
 }
 function JSON() {
     fetch('levels.json')
@@ -367,7 +367,9 @@ function JSON() {
                 document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
                 document.getElementById(buttonName.id).style.background = "red";
                 document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
-                document.getElementById(buttonName.id).addEventListener("click",function(){              
+                document.getElementById(buttonName.id).addEventListener("click",function(){          
+                    multiplyer = LEVEL_Data.levels[LEVELON].DeathBricksSpawnRate+1;    
+                    console.log("Multi " + multiplyer);
                     LEVELON = buttonName.id.slice(5, 100)-1;
                     boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
                     boss.damage = LEVEL_Data.levels[LEVELON].boss[0].damage;
