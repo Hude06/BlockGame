@@ -4,7 +4,7 @@ import { Mouse,Button } from "./MouseEngine.js";
 let canvas = document.getElementById("canvas")
 let ctx = canvas.getContext("2d")
 let currentKey = new Map();
-let multiplyer = 10
+let multiplyer = 20
 let powerUpMultiplyer = 300;
 let RandomNumDeathBrick = Math.floor(Math.random() * multiplyer); 
 let NumToMatchDeathBrick = Math.floor(Math.random()* multiplyer)
@@ -168,7 +168,7 @@ class Boss {
 }
 class Player {
     constructor() {
-        this.bounds = new Rect(200,300,50,50);
+        this.bounds = new Rect(200,300,18,18);
         this.speed = 2;
         this.size = 50;
         this.helth = 100
@@ -179,6 +179,8 @@ class Player {
         this.dash = true;
         this.tempSpeed = 2;
         this.die = new Audio();
+        this.GameWidth = 18;
+        this.GameHeight = 18;
         this.die.src = "./Assets/explosion.wav"
     }
     draw() {
@@ -190,12 +192,15 @@ class Player {
         ctx.lineWidth = 5
         ctx.strokeRect(20,15,200,40)
     }
+    
     init() {
+        this.bounds.w = this.GameWidth;
+        this.bounds.h = this.GameHeight;
         this.tempSpeed = this.speed;
     } 
     update() {
-        this.bounds.w += 0.02
-        this.bounds.h += 0.02
+        this.bounds.w += 0.02;
+        this.bounds.h += 0.02;
 
         if (currentKey.get("w") ) {
             this.bounds.y -= this.tempSpeed;
@@ -236,8 +241,8 @@ class Player {
     reset() {
         this.bounds.x = 200;
         this.bounds.y = 300;
-        this.bounds.w = 18;
-        this.bounds.h = 18;
+        this.bounds.w = this.GameWidth;
+        this.bounds.h = this.GameHeight;
         this.tempSpeed = this.speed;
         this.size = 18;
         this.helth = 100;
@@ -267,7 +272,9 @@ class GoldKey {
                 if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                     this.visable = false;
                     player.Frags += player.LevelFrags
-                    LEVELS_Unlocked += 1
+                    if (LEVELON >= LEVELS_Unlocked) {
+                        LEVELS_Unlocked += 1
+                    }
                     LEVEL_Data.levels[LEVELS_Unlocked].Unlocked = true
                     JSON();
                     mode = "menu"
@@ -365,8 +372,8 @@ function JSON() {
                     boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
                     boss.damage = LEVEL_Data.levels[LEVELON].boss[0].damage;
                     goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
-                    player.bounds.w = data.levels[LEVELON].player[0].startingSize;
-                    player.bounds.h = data.levels[LEVELON].player[0].startingSize;
+                    player.GameWidth = data.levels[LEVELON].player[0].startingSize;
+                    player.GameHeight = data.levels[LEVELON].player[0].startingSize;
                     document.getElementById("LevelSelector").style.visibility = "hidden";
                     mode = "startGame"
             })
@@ -387,8 +394,6 @@ let particalEngine = new ParticleSource();
 let mouse = new Mouse();
 let SpeedUpgradeButton = new Button();
 let BackButton = new Button();
-
-
 function keyboardInit() {
     window.addEventListener("keydown", function (event) {
         currentKey.set(event.key, true);
