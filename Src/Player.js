@@ -1,7 +1,9 @@
-import {currentKey, deathBricks} from "./Game.js";
+import {currentKey, deathBricks, mode} from "./Game.js";
 import { Rect } from "./RectUtils.js";
 export class Player {
     constructor() {
+        this.levelON = 0;
+        this.mode = "menu"
         this.bounds = new Rect(200,300,18,18);
         this.speed = 2;
         this.size = 50;
@@ -56,7 +58,7 @@ export class Player {
         }
         if (this.alive === false) {
             alert("You Died!")
-            mode = "menu";
+            this.mode = "menu";
         }
         if ( this.bounds.y < 0 ) {
             this.bounds.y = 0.5;

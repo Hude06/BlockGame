@@ -1,8 +1,10 @@
-import {Rect} from "./RectUtils.js"
+import {Rect} from "./RectUtils.js";
 import { ParticleSource } from "./Particals.js";
 import { Mouse,Button } from "./MouseEngine.js";
-import { Player } from "./Player.js";
-let canvas = document.getElementById("canvas")
+import { Player,  } from "./Player.js";
+import { Boss } from "./Boss.js";
+import { GoldKey,DeathBrick,Powerup } from "./Squares.js";
+let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d")
 export let currentKey = new Map();
 export let multiplyer = 1;
@@ -11,14 +13,13 @@ export let RandomNumDeathBrick = 0;
 export let NumToMatchDeathBrick = 0;
 let PowerupRandomNum = Math.floor(Math.random()*powerUpMultiplyer+1)
 let NumToMatchPowerUp = Math.floor(Math.random()*powerUpMultiplyer+1)
-let mode = "menu";
+export let mode = "menu";
 let time = document.getElementById("time")
 let elapsedTime = 0;
 let LEVEL_Data = [];
 let LEVELON = 0;
-let Shake = false;
-let roundedTime = Math.round(elapsedTime)
-let CoinFlip;
+export let Shake = false;
+export let roundedTime = Math.round(elapsedTime)
 let LEVELS_Unlocked = 0;
 let shards = []
 let FragsELEMENT = document.getElementById("frags")
@@ -33,8 +34,8 @@ analyser.connect(destination);
 const distortion = audioCtx.createWaveShaper();
 distortion.connect(audioCtx.destination);
 analyser.fftSize = 512/8;
-const bufferLength = analyser.frequencyBinCount;
-const dataArray = new Uint8Array(bufferLength);
+export const bufferLength = analyser.frequencyBinCount;
+export const dataArray = new Uint8Array(bufferLength);
 analyser.getByteTimeDomainData(dataArray);
 music.addEventListener("canplay", () => {
     music.volume = 0.7
@@ -68,164 +69,7 @@ function handleMouseUp(event) {
         mouse.clicked = false;
     }
 }
-class Boss {
-    constructor() {
-        this.bounds = new Rect(1000,200,20,20);
-        this.speed = 1;
-        this.size = 15;
-        this.intersected = false
-        this.direction = 1
-        this.damage = 2
-        //1 = up
-        //2 = down
-        //3 = left
-        //4 = right
-    }
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.bounds.x+this.bounds.w/2, this.bounds.y+this.bounds.h/2, this.size, 0, 2 * Math.PI, false);
-        ctx.lineWidth = 3;
-        ctx.fillStyle = ' #d3473d ';
-        ctx.fill();
-    }
-    update() {
-        for (let i = 0; i < deathBricks.length; i++) {
-            if (this.bounds.intersects(deathBricks[i].bounds) || deathBricks[i].bounds.intersects(this.bounds)) {
-                this.intersected = true;
-            } else {
-                setTimeout(() => {
-                    this.intersected = false
-                }, 100);
-            }
-        }
-        if (this.bounds.intersects(player.bounds) || player.bounds.intersects(this.bounds)) {
-            player.helth -= this.damage / 10 
-            if (player.helth <= 0) {
-                player.alive = false
-            }
-        }
-        if (this.intersected === false) {
-            if (this.bounds.x >= player.bounds.x) {
-                this.bounds.x -= this.speed;
-                this.direction = 3
-            }
-            if (this.bounds.x <= player.bounds.x) {
-                this.bounds.x += this.speed;
-                this.direction = 4
-            }
-            if (this.bounds.y >= player.bounds.y) {
-                this.bounds.y -= this.speed;
-                this.direction = 1
-            }
-            if (this.bounds.y <= player.bounds.y) {
-                this.bounds.y += this.speed;
-                this.direction = 2
-            }
-        } else {
-            if (this.direction === 1){
-                this.bounds.y += this.speed;
-            }
-            if (this.direction === 2){
-                this.bounds.y -= this.speed;
-            }
-            if (this.direction === 3){
-                this.bounds.x += this.speed;
-            }
-            if (this.direction === 4){
-                this.bounds.x -= this.speed;
-            }
-        }
-}
-    reset() {
-        this.bounds.x = 1000
-        this.bounds.y = 200
-        this.intersected = false
-        this.direction = 1
-    }
-}
-class GoldKey {
-    constructor() {
-        this.bounds = new Rect(200, 200,25,25);
-        this.visable = true;
-        this.TimeToShow = 15
-    }
-    draw() {
-        if (roundedTime >= this.TimeToShow) {
-            if (this.visable === true) {
-                ctx.strokeStyle = "gold"
-                ctx.lineWidth = 7
-                ctx.fillStyle = "black"
-                ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-                ctx.strokeRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-            }
-        }
-    }
-    update() {
-        if (roundedTime >= this.TimeToShow) {
-            if (this.visable === true) {
-                if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
-                    this.visable = false;
-                    player.Frags += player.LevelFrags
-                    if (LEVELON >= LEVELS_Unlocked) {
-                        LEVELS_Unlocked += 1
-                    }
-                    LEVEL_Data.levels[LEVELS_Unlocked].Unlocked = true
-                    JSON();
-                    mode = "menu"
 
-                }
-            }
-        }
-    }
-}
-class Powerup {
-    constructor() {
-        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100, Math.floor(Math.random() * canvas.height-100)+100,25,25);
-        this.visable = true;
-        this.coin = new Audio();
-        this.coin.src = "./Assets/Coin.wav"
-    }
-    draw() {
-            if (this.visable === true) {
-                ctx.fillStyle = "green"
-                ctx.fillRect(this.bounds.x,this.bounds.y,this.bounds.w,this.bounds.h)
-            }
-    }
-    update() {
-        if (this.visable === true) {
-            if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
-                player.bounds.w /= 1.5
-                player.bounds.h /= 1.5
-                player.tempSpeed *= 1.2
-                this.coin.play();
-                Shake = true
-                setTimeout(() => {
-                    Shake = false;
-                }, 200);
-                  
-                this.visable = false;
-            }
-        }
-    }
-}
-class DeathBrick {
-    constructor() {
-        this.random = Math.floor(Math.random() * 25)+5
-        this.roundedY = 0;
-        this.bounds = new Rect(Math.floor(Math.random() * canvas.width-100)+100,Math.floor(Math.random() * canvas.height-100)+100,15,15);
-    }
-    draw() {
-        for (let i = 0; i < bufferLength; i++) {
-            const v = dataArray[i] / 128.0;
-            const y = v * (100);
-            this.roundedY = Math.floor(Math.round(y)/10)
-            ctx.fillStyle = "#316a96"
-            ctx.fillRect(this.bounds.x-(this.roundedY/2),this.bounds.y-(this.roundedY/2),this.bounds.w+this.roundedY,this.bounds.h+this.roundedY)
-        }
-    }
-    update() {
-    }
-}
 function MakePowerupsAndBricks() {
     console.log(RandomNumDeathBrick,NumToMatchDeathBrick)
     if (RandomNumDeathBrick === NumToMatchDeathBrick) {
@@ -258,16 +102,16 @@ function JSON() {
                 document.getElementById(buttonName.id).style.background = "red";
                 document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
                 document.getElementById(buttonName.id).addEventListener("click",function(){          
-                    multiplyer = LEVEL_Data.levels[LEVELON].DeathBricksSpawnRate+1;    
+                    multiplyer = LEVEL_Data.levels[player.levelON].DeathBricksSpawnRate+1;    
                     console.log("Multi " + multiplyer);
-                    LEVELON = buttonName.id.slice(5, 100)-1;
-                    boss.speed = LEVEL_Data.levels[LEVELON].boss[0].speed;
-                    boss.damage = LEVEL_Data.levels[LEVELON].boss[0].damage;
-                    goldKey.TimeToShow = data.levels[LEVELON].TimeToWin;
-                    player.GameWidth = data.levels[LEVELON].player[0].startingSize;
-                    player.GameHeight = data.levels[LEVELON].player[0].startingSize;
+                    player.levelON = buttonName.id.slice(5, 100)-1;
+                    boss.speed = LEVEL_Data.levels[player.levelON].boss[0].speed;
+                    boss.damage = LEVEL_Data.levels[player.levelON].boss[0].damage;
+                    goldKey.TimeToShow = data.levels[player.levelON].TimeToWin;
+                    player.GameWidth = data.levels[player.levelON].player[0].startingSize;
+                    player.GameHeight = data.levels[player.levelON].player[0].startingSize;
                     document.getElementById("LevelSelector").style.visibility = "hidden";
-                    mode = "startGame"
+                    player.mode = "startGame"
             })
         }
     }
@@ -279,7 +123,7 @@ function JSON() {
 }
 export let deathBricks = []
 let powerups = []
-let player = new Player();
+export let player = new Player();
 let goldKey = new GoldKey();
 let boss = new Boss();
 let particalEngine = new ParticleSource();
@@ -305,7 +149,7 @@ function loop() {
     roundedTime = Math.round(elapsedTime)
     ctx.clearRect(0,0,canvas.width,canvas.height)
     FragsELEMENT.innerHTML = ""+Math.round(player.Frags);
-    if (mode === "menu") {
+    if (player.mode === "menu") {
         document.getElementById("menu").style.visibility = "visible"
         document.getElementById("time").style.visibility = "hidden"
         FragsELEMENT.style.visibility = "visible"
@@ -313,12 +157,12 @@ function loop() {
         GameInit();
 
     }
-    if (mode != "menu") {
+    if (player.mode != "menu") {
         document.getElementById("menu").style.visibility = "hidden"
         FragsELEMENT.style.visibility = "hidden"
 
     }
-    if (mode === "startGame") {
+    if (player.mode === "startGame") {
         elapsedTime = 0;
         deathBricks = [];
         powerups = [];
@@ -328,9 +172,9 @@ function loop() {
         boss.reset();
         goldKey.visable = true;
         currentKey.clear();
-        mode = "game";
+        player.mode = "game";
     }
-    if (mode === "game") {    
+    if (player.mode === "game") {    
         ctx.save(); 
         document.getElementById("time").style.visibility = "visible"
         elapsedTime += 0.0166
@@ -360,18 +204,18 @@ function loop() {
         MakePowerupsAndBricks();
         for (let i = 0; i < deathBricks.length; i++) {
             deathBricks[i].update();
-            deathBricks[i].draw();
+            deathBricks[i].draw(ctx);
         }
         for (let i = 0; i < powerups.length; i++) {
             powerups[i].update();
-            powerups[i].draw();
+            powerups[i].draw(ctx);
         }
 
     }
-    if (mode === "levelSelector") {
+    if (player.mode === "levelSelector") {
         document.getElementById("LevelSelector").style.visibility = "visible"
     }
-    if (mode === "store") {
+    if (player.mode === "store") {
         ctx.fillStyle = "gray"
         ctx.fillRect(0,0,canvas.width,canvas.height)
         SpeedUpgradeButton.draw(ctx,"Speed +1 , -1$",450,10,700,70,"black",4);        
@@ -386,16 +230,16 @@ function loop() {
         BackButton.draw(ctx,"Back",canvas.width/2+650,10,100,70,"black",6);
         ctx.fillStyle = "black"  
         if (mouse.clickOn(BackButton) === true) {
-            mode = "menu"
+            player.mode = "menu"
         }
  
         document.getElementById("Store").style.visibility = "visible"
     }
-    if (mode === "About") {
+    if (player.mode === "About") {
         BackButton.draw(ctx,"Back",canvas.width/2+650,10,100,70,"black",6);
         ctx.fillStyle = "black"  
         if (mouse.clickOn(BackButton) === true) {
-            mode = "menu"
+            player.mode = "menu"
         }
         ctx.font = "100px Impact";
         ctx.fillText("How to Play",canvas.width/2,100)  
@@ -424,17 +268,17 @@ function init() {
         updateMousePosition(event);
     });
     document.getElementById("LevelSelectorButton").addEventListener("click",function(){
-        mode = "levelSelector"
+        player.mode = "levelSelector"
         document.getElementById("LevelSelector").style.visibility = "visible"
     })
     document.getElementById("About").addEventListener("click",function(){
-        mode = "About"
+        player.mode = "About"
     })
     document.getElementById("StoreButton").addEventListener("click",function(){
-        mode = "store"
+        player.mode = "store"
     })
     document.getElementById("Start").addEventListener("click",function(){
-        mode = "levelSelector"
+        player.mode = "levelSelector"
     })
     keyboardInit();
     loop()
