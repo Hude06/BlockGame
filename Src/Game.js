@@ -20,7 +20,6 @@ let LEVEL_Data = [];
 let LEVELON = 0;
 export let Shake = false;
 export let roundedTime = Math.round(elapsedTime)
-let LEVELS_Unlocked = 0;
 let shards = []
 let FragsELEMENT = document.getElementById("frags")
 const audioCtx = new AudioContext();
@@ -87,26 +86,26 @@ function MakePowerupsAndBricks() {
     }
 
 }
-function JSON() {
+export function JSON() {
     fetch('levels.json')
   .then(response => response.json())
   .then(data => {
-    LEVEL_Data = data;
+    player.LEVEL_Data = data;
     for (let i = 0; i < data.levels.length; i++) {
             const buttonName = document.createElement('button')
             if (data.levels[i].Unlocked) {
-                buttonName.id = data.levels[LEVELS_Unlocked].name
-                buttonName.innerHTML = LEVELS_Unlocked+1
+                buttonName.id = data.levels[player.LEVELS_Unlocked].name
+                buttonName.innerHTML = player.LEVELS_Unlocked+1
                 document.getElementById('LevelSelector').appendChild(buttonName);
                 document.getElementById(buttonName.id).style.top += i*data.levels.length*30 + "px";
                 document.getElementById(buttonName.id).style.background = "red";
                 document.getElementById(buttonName.id).style.marginTop += i*5 + "px";
                 document.getElementById(buttonName.id).addEventListener("click",function(){          
-                    multiplyer = LEVEL_Data.levels[player.levelON].DeathBricksSpawnRate+1;    
+                    multiplyer = player.LEVEL_Data.levels[player.levelON].DeathBricksSpawnRate+1;    
                     console.log("Multi " + multiplyer);
                     player.levelON = buttonName.id.slice(5, 100)-1;
-                    boss.speed = LEVEL_Data.levels[player.levelON].boss[0].speed;
-                    boss.damage = LEVEL_Data.levels[player.levelON].boss[0].damage;
+                    boss.speed = player.LEVEL_Data.levels[player.levelON].boss[0].speed;
+                    boss.damage = player.LEVEL_Data.levels[player.levelON].boss[0].damage;
                     goldKey.TimeToShow = data.levels[player.levelON].TimeToWin;
                     player.GameWidth = data.levels[player.levelON].player[0].startingSize;
                     player.GameHeight = data.levels[player.levelON].player[0].startingSize;

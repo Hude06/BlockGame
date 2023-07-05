@@ -2,6 +2,8 @@ import {currentKey, deathBricks, mode} from "./Game.js";
 import { Rect } from "./RectUtils.js";
 export class Player {
     constructor() {
+        this.LEVEL_Data = []
+        this.LEVELS_Unlocked = 0
         this.levelON = 0;
         this.mode = "menu"
         this.bounds = new Rect(200,300,18,18);

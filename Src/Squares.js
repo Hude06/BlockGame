@@ -1,6 +1,6 @@
 import { Rect } from "./RectUtils.js";
 import { roundedTime, bufferLength, dataArray } from "./Game.js";
-import { player } from "./Game.js";
+import { player, JSON } from "./Game.js";
 export class GoldKey {
     constructor(ctx) {
         this.bounds = new Rect(200, 200,25,25);
@@ -24,12 +24,12 @@ export class GoldKey {
                 if (player.bounds.intersects(this.bounds) || this.bounds.intersects(player.bounds)) {
                     this.visable = false;
                     player.Frags += player.LevelFrags
-                    if (player.LEVELON >= LEVELS_Unlocked) {
-                        LEVELS_Unlocked += 1
+                    if (player.levelON >= player.LEVELS_Unlocked) {
+                        player.LEVELS_Unlocked += 1
                     }
-                    LEVEL_Data.levels[LEVELS_Unlocked].Unlocked = true
+                    player.LEVEL_Data.levels[player.LEVELS_Unlocked].Unlocked = true
                     JSON();
-                    mode = "menu"
+                    player.mode = "menu"
 
                 }
             }
